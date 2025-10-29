@@ -1,0 +1,21 @@
+{
+  "appName": "ClaraMente",
+  "tagline": "Apoio prático em TCC, no seu tempo.",
+  "startSession": "Iniciar sessão",
+  "choosePersona": "Escolha o perfil do terapeuta",
+  "chooseStyle": "Escolha o estilo de terapia",
+  "conservative": "Conservador",
+  "integrative": "Integrativo",
+  "language": "Idioma",
+  "freeSessionsLeft": "Sessões gratuitas restantes: {{count}}",
+  "paywallTitle": "Continue seu progresso",
+  "paywallBody": "Você já usou suas 2 sessões gratuitas. Desbloqueie esta sessão para continuar.",
+  "checkout": "Ir para pagamento",
+  "consent": "Este app usa IA para apoio baseado em TCC e não substitui tratamento profissional.",
+  "ageConfirm": "Declaro ter 18 anos ou mais.",
+  "endSession": "Encerrar sessão",
+  "feedbackTitle": "Como foi sua sessão?",
+  "feedbackThanks": "Obrigado pelo feedback!",
+  "welcome": "Bem-vindo ao ClaraMente",
+  "loading": "Iniciando..."
+}

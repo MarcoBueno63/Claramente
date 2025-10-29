@@ -1,0 +1,82 @@
+// schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String   @id @default(cuid())
+  email            String?  @unique
+  locale           String   @default("pt-BR")
+  ageConfirmed     Boolean  @default(false)
+  freeSessionsUsed Int      @default(0)
+  createdAt        DateTime @default(now())
+  sessions         Session[]
+  payments         Payment[]
+  leads            Lead[] @relation("UserLeads")
+}
+
+model Session {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  startedAt  DateTime  @default(now())
+  endedAt    DateTime?
+  durationMin Int      @default(0)
+  language   String    @default("pt-BR")
+  persona    String
+  style      String
+  status     String    @default("active") // active|ended
+  riskFlag   String    @default("none")
+  summary    String?
+  messages   Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id])
+  role      String   // user|assistant|system
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  sessionId   String?
+  status      String   // pending|paid|failed
+  providerRef String?
+  createdAt   DateTime @default(now())
+}
+
+model Psychologist {
+  id          String   @id @default(cuid())
+  name        String
+  crp         String
+  specialty   String
+  approach    String
+  gender      String
+  location    String
+  price       Int
+  whatsapp    String
+  rating      Float
+  experience  Int
+  leads       Lead[] @relation("PsychologistLeads")
+}
+
+model Lead {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User @relation("UserLeads", fields: [userId], references: [id])
+  psychologistId String
+  psychologist   Psychologist @relation("PsychologistLeads", fields: [psychologistId], references: [id])
+  status         String   // new|contacted|scheduled|paid
+  createdAt      DateTime @default(now())
+}
