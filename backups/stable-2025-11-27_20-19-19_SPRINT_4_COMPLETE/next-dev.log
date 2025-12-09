@@ -1,0 +1,17 @@
+   ▲ Next.js 15.5.2
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.12:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 4.4s
+ ○ Compiling /api/avatar/tts ...
+ ✓ Compiled /api/avatar/tts in 1375ms (298 modules)
+[api/avatar/tts] request body: { text: '[redacted]', voice: undefined }
+[api/avatar/tts] missing ELEVENLABS_API_KEY in environment
+ POST /api/avatar/tts 500 in 1780ms
+ ✓ Compiled in 1304ms (298 modules)
+ ✓ Compiled in 248ms (195 modules)
+ ✓ Compiled in 354ms (298 modules)
+ ✓ Compiled in 732ms (103 modules)
+ ✓ Compiled in 918ms (103 modules)

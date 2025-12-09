@@ -1,0 +1,42 @@
+{
+  "backupInfo": {
+    "timestamp": "2025-11-11_00-50-31",
+    "status": "STABLE_WORKING",
+    "version": "1.0.0-stable",
+    "description": "Versão funcional completa com chat TCC, layout responsivo e acessibilidade WCAG 2.1 AA"
+  },
+  "serverInfo": {
+    "framework": "Next.js 15.5.2",
+    "port": 3000,
+    "apiEndpoint": "/api/chat",
+    "lastTestedPID": 34200
+  },
+  "features": {
+    "chatIA": true,
+    "responsiveLayout": true,
+    "accessibility": true,
+    "tccTherapy": true,
+    "mobileOptimized": true
+  },
+  "files": {
+    "ChatWindow.tsx": "Interface principal do chat - versão estável",
+    "chat-page.tsx": "Layout da página de chat sem cortes",
+    "onboarding-page.tsx": "Página inicial com contraste corrigido", 
+    "globals.css": "Estilos de acessibilidade WCAG 2.1 AA",
+    "api-chat-route.ts": "API de IA conversacional completa",
+    "package.json": "Dependências e scripts do projeto"
+  },
+  "restoreInstructions": [
+    "1. Execute restore.ps1 para restaurar arquivos",
+    "2. Execute 'npm run dev' para iniciar servidor",
+    "3. Acesse http://localhost:3000/chat para testar",
+    "4. Verifique se a API responde corretamente"
+  ],
+  "lastValidation": {
+    "serverRunning": true,
+    "apiTested": true,
+    "chatFunctional": true,
+    "layoutFixed": true,
+    "contrastCompliant": true
+  }
+}

@@ -1,0 +1,42 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#ffe4f0"/>
+  <ellipse cx="200" cy="320" rx="40" ry="60" fill="#fdd5bf"/>
+  <ellipse cx="200" cy="200" rx="100" ry="120" fill="#ffe8db"/>
+  <ellipse cx="200" cy="100" rx="130" ry="90" fill="#3a2010"/>
+  <ellipse cx="130" cy="200" rx="35" ry="80" fill="#3a2010"/>
+  <ellipse cx="270" cy="200" rx="35" ry="80" fill="#3a2010"/>
+  <path d="M 100 120 Q 150 90, 200 100 Q 250 90, 300 120 L 290 140 Q 230 110, 200 115 Q 170 110, 110 140 Z" fill="#4a2f1a"/>
+  <ellipse cx="110" cy="200" rx="12" ry="18" fill="#fdd5bf"/>
+  <ellipse cx="290" cy="200" rx="12" ry="18" fill="#fdd5bf"/>
+  <circle cx="110" cy="210" r="10" fill="#ffd700" stroke="#ff69b4" stroke-width="2"/>
+  <circle cx="290" cy="210" r="10" fill="#ffd700" stroke="#ff69b4" stroke-width="2"/>
+  <ellipse cx="160" cy="190" rx="20" ry="25" fill="white"/>
+  <circle cx="160" cy="195" r="15" fill="#6b4423"/>
+  <circle cx="160" cy="195" r="8" fill="black"/>
+  <circle cx="163" cy="192" r="5" fill="white"/>
+  <ellipse cx="240" cy="190" rx="20" ry="25" fill="white"/>
+  <circle cx="240" cy="195" r="15" fill="#6b4423"/>
+  <circle cx="240" cy="195" r="8" fill="black"/>
+  <circle cx="243" cy="192" r="5" fill="white"/>
+  <g stroke="black" stroke-width="3" stroke-linecap="round">
+    <path d="M 145 180 Q 142 175, 145 172"/><path d="M 155 178 Q 153 173, 156 170"/>
+    <path d="M 165 178 Q 165 173, 168 170"/><path d="M 175 180 Q 178 175, 181 173"/>
+    <path d="M 225 180 Q 222 175, 225 172"/><path d="M 235 178 Q 233 173, 236 170"/>
+    <path d="M 245 178 Q 245 173, 248 170"/><path d="M 255 180 Q 258 175, 261 173"/>
+  </g>
+  <path d="M 135 170 Q 160 163, 180 168" stroke="#4a2f1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 220 168 Q 240 163, 265 170" stroke="#4a2f1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 200 200 L 197 230" stroke="#e8c3a8" stroke-width="2"/>
+  <ellipse cx="195" cy="232" rx="3" ry="4" fill="#d4a896"/>
+  <ellipse cx="205" cy="232" rx="3" ry="4" fill="#d4a896"/>
+  <ellipse cx="200" cy="260" rx="25" ry="8" fill="#ff69b4"/>
+  <path d="M 175 260 Q 190 253, 200 254 Q 210 253, 225 260" fill="#ff1493" stroke="#c71585" stroke-width="1"/>
+  <path d="M 175 260 Q 187 268, 200 269 Q 213 268, 225 260" fill="#ff69b4"/>
+  <ellipse cx="200" cy="264" rx="15" ry="3" fill="white" opacity="0.7"/>
+  <ellipse cx="140" cy="230" rx="25" ry="15" fill="#ff69b4" opacity="0.5"/>
+  <ellipse cx="260" cy="230" rx="25" ry="15" fill="#ff69b4" opacity="0.5"/>
+  <ellipse cx="200" cy="310" rx="35" ry="5" fill="none" stroke="#ff69b4" stroke-width="3"/>
+  <circle cx="200" cy="318" r="6" fill="#ff1493"/>
+  <path d="M 130 340 Q 140 330, 160 335 L 240 335 Q 260 330, 270 340 L 270 400 L 130 400 Z" fill="#ffb6c1"/>
+  <text x="200" y="390" font-family="Arial" font-size="14" fill="#ff1493" text-anchor="middle" font-weight="bold">NOVA CLARA </text>
+</svg>

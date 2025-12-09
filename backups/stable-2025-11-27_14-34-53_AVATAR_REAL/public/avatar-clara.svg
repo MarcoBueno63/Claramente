@@ -1,0 +1,127 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="skinGradient" cx="50%" cy="40%">
+      <stop offset="0%" style="stop-color:#ffe4d0;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f5d5c0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8c4a8;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="hairGradient" cx="50%" cy="30%">
+      <stop offset="0%" style="stop-color:#6b4423;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#4a2f1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a2010;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="eyeGradient" cx="40%" cy="40%">
+      <stop offset="0%" style="stop-color:#8b6f47;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#5c4a2f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3d2e1f;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="lipGradient" cx="50%" cy="30%">
+      <stop offset="0%" style="stop-color:#ea9999;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d97b8f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c96a7f;stop-opacity:1" />
+    </radialGradient>
+    
+    <filter id="softGlow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+    </filter>
+    
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <rect width="400" height="400" fill="#f8f4f0"/>
+  
+  <!-- Pescoço -->
+  <ellipse cx="200" cy="310" rx="35" ry="50" fill="url(#skinGradient)" filter="url(#shadow)"/>
+  
+  <!-- Ombros -->
+  <path d="M 120 340 Q 130 320, 150 325 L 250 325 Q 270 320, 280 340 L 280 400 L 120 400 Z" fill="#8b7ba8" filter="url(#shadow)"/>
+  
+  <!-- Cabeça -->
+  <ellipse cx="200" cy="180" rx="90" ry="105" fill="url(#skinGradient)" filter="url(#shadow)"/>
+  
+  <!-- Cabelo -->
+  <g filter="url(#shadow)">
+    <ellipse cx="200" cy="100" rx="110" ry="70" fill="url(#hairGradient)"/>
+    <path d="M 95 120 Q 85 100, 90 80 Q 100 60, 120 70 L 125 200 Q 115 220, 105 215 Z" fill="url(#hairGradient)"/>
+    <path d="M 305 120 Q 315 100, 310 80 Q 300 60, 280 70 L 275 200 Q 285 220, 295 215 Z" fill="url(#hairGradient)"/>
+    <path d="M 120 95 Q 140 75, 160 80 Q 180 75, 200 78 Q 220 75, 240 80 Q 260 75, 280 95 L 275 115 Q 240 95, 200 100 Q 160 95, 125 115 Z" fill="#5c3317"/>
+    <ellipse cx="105" cy="180" rx="25" ry="50" fill="url(#hairGradient)"/>
+    <ellipse cx="295" cy="180" rx="25" ry="50" fill="url(#hairGradient)"/>
+  </g>
+  
+  <!-- Orelhas -->
+  <ellipse cx="105" cy="190" rx="10" ry="15" fill="url(#skinGradient)"/>
+  <ellipse cx="295" cy="190" rx="10" ry="15" fill="url(#skinGradient)"/>
+  
+  <!-- Olho esquerdo -->
+  <g>
+    <ellipse cx="165" cy="170" rx="18" ry="20" fill="white" filter="url(#softGlow)"/>
+    <circle cx="165" cy="172" r="12" fill="url(#eyeGradient)"/>
+    <circle cx="165" cy="172" r="6" fill="#2c1810"/>
+    <circle cx="167" cy="169" r="4" fill="white" opacity="0.9"/>
+  </g>
+  
+  <!-- Olho direito -->
+  <g>
+    <ellipse cx="235" cy="170" rx="18" ry="20" fill="white" filter="url(#softGlow)"/>
+    <circle cx="235" cy="172" r="12" fill="url(#eyeGradient)"/>
+    <circle cx="235" cy="172" r="6" fill="#2c1810"/>
+    <circle cx="237" cy="169" r="4" fill="white" opacity="0.9"/>
+  </g>
+  
+  <!-- Cílios -->
+  <g stroke="#2c1810" fill="none" stroke-linecap="round">
+    <path d="M 148 158 Q 145 152, 148 151" stroke-width="1.2"/>
+    <path d="M 153 156 Q 151 150, 154 149" stroke-width="1.2"/>
+    <path d="M 158 155 Q 157 149, 160 148" stroke-width="1.2"/>
+    <path d="M 163 156 Q 163 150, 166 149" stroke-width="1.2"/>
+    <path d="M 168 157 Q 169 151, 172 150" stroke-width="1.2"/>
+    <path d="M 173 158 Q 175 152, 178 152" stroke-width="1.2"/>
+    <path d="M 218 158 Q 215 152, 218 151" stroke-width="1.2"/>
+    <path d="M 223 156 Q 221 150, 224 149" stroke-width="1.2"/>
+    <path d="M 228 155 Q 227 149, 230 148" stroke-width="1.2"/>
+    <path d="M 233 156 Q 233 150, 236 149" stroke-width="1.2"/>
+    <path d="M 238 157 Q 239 151, 242 150" stroke-width="1.2"/>
+    <path d="M 243 158 Q 245 152, 248 152" stroke-width="1.2"/>
+  </g>
+  
+  <!-- Sobrancelhas -->
+  <path d="M 145 152 Q 155 148, 168 150 Q 175 151, 180 153" stroke="#4a2f1a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <path d="M 220 153 Q 230 148, 243 150 Q 250 151, 255 153" stroke="#4a2f1a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Nariz -->
+  <path d="M 200 185 Q 198 205, 197 215" stroke="#d4a574" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <ellipse cx="197" cy="217" rx="2" ry="2.5" fill="#c49464" opacity="0.4"/>
+  <ellipse cx="203" cy="217" rx="2" ry="2.5" fill="#c49464" opacity="0.4"/>
+  
+  <!-- Lábios -->
+  <g>
+    <path d="M 175 235 Q 185 230, 200 231 Q 215 230, 225 235" fill="url(#lipGradient)" stroke="#c96a7f" stroke-width="0.8"/>
+    <path d="M 175 235 Q 185 243, 200 244 Q 215 243, 225 235" fill="#ea9999" stroke="#c96a7f" stroke-width="0.8"/>
+    <ellipse cx="200" cy="240" rx="15" ry="3" fill="white" opacity="0.4"/>
+  </g>
+  
+  <!-- Colar -->
+  <ellipse cx="200" cy="305" rx="30" ry="4" fill="none" stroke="#d4af37" stroke-width="1.8"/>
+  <circle cx="200" cy="310" r="4" fill="#d4af37" filter="url(#softGlow)"/>
+  
+  <!-- Brincos -->
+  <g filter="url(#softGlow)">
+    <line x1="105" y1="198" x2="105" y2="208" stroke="#d4af37" stroke-width="1.2"/>
+    <circle cx="105" cy="211" r="4" fill="#d4af37"/>
+    <line x1="295" y1="198" x2="295" y2="208" stroke="#d4af37" stroke-width="1.2"/>
+    <circle cx="295" cy="211" r="4" fill="#d4af37"/>
+  </g>
+  
+  <!-- Blush -->
+  <ellipse cx="155" cy="205" rx="22" ry="12" fill="#ffb3c1" opacity="0.35" filter="url(#softGlow)"/>
+  <ellipse cx="245" cy="205" rx="22" ry="12" fill="#ffb3c1" opacity="0.35" filter="url(#softGlow)"/>
+  
+  <!-- Sinal de beleza -->
+  <circle cx="215" cy="220" r="2" fill="#6b4423" opacity="0.6"/>
+</svg>

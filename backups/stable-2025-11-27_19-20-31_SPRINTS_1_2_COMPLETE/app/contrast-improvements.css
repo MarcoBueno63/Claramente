@@ -1,0 +1,112 @@
+/* Melhorias de Contraste para Acessibilidade */
+
+/* Textos cinza muito claros - for�a escurecimento */
+.text-gray-500 {
+  color: rgb(75 85 99) !important; /* gray-600 */
+}
+
+.text-gray-400 {
+  color: rgb(55 65 81) !important; /* gray-700 */
+}
+
+/* Timestamps e textos secund�rios */
+.chat-timestamp {
+  color: rgb(75 85 99) !important; /* gray-600 */
+  font-weight: 500;
+}
+
+/* Placeholders e textos de estado vazio */
+.empty-state-text {
+  color: rgb(55 65 81) !important; /* gray-700 */
+}
+
+/* Melhoria para textos em fundo claro */
+.bg-gray-50 .text-gray-500,
+.bg-gray-100 .text-gray-500,
+.bg-white .text-gray-500 {
+  color: rgb(55 65 81) !important; /* gray-700 */
+}
+
+/* Contraste para elementos de interface */
+.text-gray-600 {
+  color: rgb(55 65 81) !important; /* gray-700 */
+}
+
+/* Elementos espec�ficos do onboarding */
+.onboarding-text {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+/* Bot�es e links com baixo contraste */
+.text-gray-500:hover {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+/* Melhorias para modo escuro */
+@media (prefers-color-scheme: dark) {
+  .dark .text-gray-500 {
+    color: rgb(209 213 219) !important; /* gray-300 */
+  }
+
+  .dark .text-gray-600 {
+    color: rgb(229 231 235) !important; /* gray-200 */
+  }
+}
+
+/* Regras específicas para elementos sem classes de cor */
+span:not([class*="text-"]):not([class*="bg-"]) {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+/* Lista de técnicas e recursos */
+.space-y-3 li span:not([class*="text-"]):not([class*="bg-"]) {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+/* Grid de técnicas implementadas */
+.grid .flex span:not([class*="text-"]):not([class*="bg-"]) {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+/* Placeholders de input */
+::placeholder {
+  color: rgb(55 65 81) !important; /* gray-700 */
+  opacity: 1 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgb(55 65 81) !important; /* gray-700 */
+  opacity: 1 !important;
+}
+
+/* Força contraste em todos os spans de listas */
+li > span:not([class*="text-"]) {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+/* Melhorar contraste das mensagens do usuário */
+.bg-blue-700 .whitespace-pre-wrap {
+  color: rgb(255 255 255) !important; /* white com força */
+  font-weight: 500;
+}
+
+.bg-blue-600 .whitespace-pre-wrap {
+  color: rgb(255 255 255) !important; /* white com força */
+  font-weight: 500;
+}
+
+/* Força branco em mensagens do usuário */
+.bg-blue-700,
+.bg-blue-600 {
+  color: rgb(255 255 255) !important;
+}
+
+/* Garante legibilidade do input */
+input[type="text"] {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+input[type="text"]:focus {
+  color: rgb(31 41 55) !important; /* gray-800 */
+}

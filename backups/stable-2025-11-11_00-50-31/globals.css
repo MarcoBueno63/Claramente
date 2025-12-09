@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Fix para viewport mobile - evita corte no topo */
+@media (max-width: 768px) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Altura mínima ajustada para mobile */
+  .mobile-safe-height {
+    min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+}
+
+/* Melhorias de Contraste para Acessibilidade */
+::placeholder {
+  color: #374151 !important; /* text-gray-700 */
+  opacity: 1 !important;
+}
+
+input::placeholder {
+  color: #374151 !important; /* text-gray-700 */
+  opacity: 1 !important;
+}
+
+textarea::placeholder {
+  color: #374151 !important; /* text-gray-700 */
+  opacity: 1 !important;
+}
+
+/* Garantir contraste adequado em elementos sem classe específica */
+.text-sm:not([class*="text-"]) {
+  color: #1f2937 !important; /* text-gray-800 */
+}
+
+/* Forçar contraste em elementos de lista sem cor especificada */
+li > span:not([class*="text-"]) {
+  color: #1f2937 !important; /* text-gray-800 */
+}
+
+/* Melhorar contraste de textos de apoio */
+.text-xs:not([class*="text-"]) {
+  color: #374151 !important; /* text-gray-700 */
+}
+
+/* Mensagens do usuário com melhor contraste */
+.bg-blue-600 {
+  background-color: #1d4ed8 !important; /* bg-blue-700 */
+}
+
+/* Força texto branco em mensagens do usuário */
+.user-message, .bg-blue-600, .bg-blue-700 {
+  color: white !important;
+}
+
+/* Texto cinza mais escuro para melhor legibilidade */
+.text-gray-600 {
+  color: #374151 !important; /* text-gray-700 */
+}
+
+.text-gray-500 {
+  color: #374151 !important; /* text-gray-700 */
+}
+
+/* Input e textarea com melhor contraste */
+input:not([type="hidden"]), textarea {
+  color: #111827 !important; /* text-gray-900 */
+  background-color: white !important;
+}
+
+input:focus, textarea:focus {
+  color: #111827 !important;
+  background-color: white !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Botões com melhor acessibilidade */
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Links com melhor contraste */
+a:not([class*="text-"]) {
+  color: #1d4ed8; /* blue-700 */
+  text-decoration: underline;
+}

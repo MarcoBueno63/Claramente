@@ -1,0 +1,521 @@
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  PsychometricScale, 
+  PsychometricQuestion, 
+  PsychometricAssessment, 
+  AVAILABLE_SCALES 
+} from '../lib/psychometric-scales'
+import { useSession } from 'next-auth/react'
+
+interface PsychometricAssessmentProps {
+  suggestedScales?: string[]
+  onComplete: (results: AssessmentResults) => void
+  onCancel: () => void
+}
+
+interface AssessmentResults {
+  completedAssessments: Array<{
+    scaleId: string
+    scaleName: string
+    score: number
+    interpretation: string
+    riskLevel: string
+    recommendations: string[]
+  }>
+  overallAssessment: {
+    riskLevel: 'low' | 'medium' | 'high' | 'critical'
+    primaryConcerns: string[]
+    recommendations: string[]
+    urgentAction: boolean
+  }
+}
+
+export default function PsychometricAssessmentComponent({
+  suggestedScales = [],
+  onComplete,
+  onCancel
+}: PsychometricAssessmentProps) {
+  const { data: session } = useSession()
+  
+  const [currentStep, setCurrentStep] = useState<'selection' | 'assessment' | 'results'>('selection')
+  const [selectedScales, setSelectedScales] = useState<PsychometricScale[]>([])
+  const [currentScaleIndex, setCurrentScaleIndex] = useState(0)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [responses, setResponses] = useState<Record<string, Record<string, number>>>({})
+  const [completedAssessments, setCompletedAssessments] = useState<any[]>([])
+  const [showProgress, setShowProgress] = useState(true)
+
+  // Inicializar escalas sugeridas
+  useEffect(() => {
+    if (suggestedScales.length > 0) {
+      const scales = AVAILABLE_SCALES.filter(scale => 
+        suggestedScales.includes(scale.id)
+      )
+      setSelectedScales(scales)
+    }
+  }, [suggestedScales])
+
+  const handleScaleSelection = (scale: PsychometricScale, selected: boolean) => {
+    if (selected) {
+      setSelectedScales(prev => [...prev, scale])
+    } else {
+      setSelectedScales(prev => prev.filter(s => s.id !== scale.id))
+    }
+  }
+
+  const startAssessment = () => {
+    if (selectedScales.length === 0) return
+    
+    // Inicializar responses para todas as escalas
+    const initialResponses: Record<string, Record<string, number>> = {}
+    selectedScales.forEach(scale => {
+      initialResponses[scale.id] = {}
+    })
+    setResponses(initialResponses)
+    
+    setCurrentStep('assessment')
+    setCurrentScaleIndex(0)
+    setCurrentQuestionIndex(0)
+  }
+
+  const handleResponse = (questionId: string, value: number) => {
+    const currentScale = selectedScales[currentScaleIndex]
+    setResponses(prev => ({
+      ...prev,
+      [currentScale.id]: {
+        ...prev[currentScale.id],
+        [questionId]: value
+      }
+    }))
+  }
+
+  const nextQuestion = () => {
+    const currentScale = selectedScales[currentScaleIndex]
+    
+    if (currentQuestionIndex < currentScale.questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1)
+    } else {
+      // Terminou a escala atual
+      nextScale()
+    }
+  }
+
+  const nextScale = () => {
+    const currentScale = selectedScales[currentScaleIndex]
+    
+    // Calcular resultado da escala atual
+    const result = PsychometricAssessment.calculateScore(
+      currentScale, 
+      responses[currentScale.id]
+    )
+    
+    const completedAssessment = {
+      scale: currentScale,
+      score: result.totalScore,
+      interpretation: result.interpretation,
+      subscaleScores: result.subscaleScores
+    }
+    
+    setCompletedAssessments(prev => [...prev, completedAssessment])
+    
+    if (currentScaleIndex < selectedScales.length - 1) {
+      setCurrentScaleIndex(prev => prev + 1)
+      setCurrentQuestionIndex(0)
+    } else {
+      // Terminou todas as escalas
+      showResults()
+    }
+  }
+
+  const showResults = () => {
+    setCurrentStep('results')
+    
+    // Salvar resultados na sessão do usuário
+    if (session?.user) {
+      saveAssessmentResults()
+    }
+  }
+
+  const saveAssessmentResults = async () => {
+    try {
+      const resultsData = generateFinalResults()
+      
+      await fetch('/api/assessment/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: (session?.user as any)?.id,
+          assessments: resultsData.completedAssessments,
+          overallAssessment: resultsData.overallAssessment,
+          completedAt: new Date().toISOString()
+        })
+      })
+    } catch (error) {
+      console.error('Erro ao salvar avaliação psicométrica:', error)
+    }
+  }
+
+  const generateFinalResults = (): AssessmentResults => {
+    const assessmentResults = completedAssessments.map(assessment => ({
+      scaleId: assessment.scale.id,
+      scaleName: assessment.scale.name,
+      score: assessment.score,
+      interpretation: assessment.interpretation.description,
+      riskLevel: assessment.interpretation.riskLevel,
+      recommendations: assessment.interpretation.recommendations
+    }))
+
+    const overallAssessment = PsychometricAssessment.generateRecommendations(
+      completedAssessments
+    )
+
+    return {
+      completedAssessments: assessmentResults,
+      overallAssessment: {
+        riskLevel: overallAssessment.overallRisk,
+        primaryConcerns: overallAssessment.primaryConcerns,
+        recommendations: overallAssessment.recommendations,
+        urgentAction: overallAssessment.urgentAction
+      }
+    }
+  }
+
+  const handleComplete = () => {
+    const results = generateFinalResults()
+    onComplete(results)
+  }
+
+  const getCurrentProgress = () => {
+    if (selectedScales.length === 0) return 0
+    
+    const totalQuestions = selectedScales.reduce((sum, scale) => sum + scale.questions.length, 0)
+    const answeredQuestions = selectedScales.slice(0, currentScaleIndex).reduce(
+      (sum, scale) => sum + scale.questions.length, 0
+    ) + currentQuestionIndex
+    
+    return (answeredQuestions / totalQuestions) * 100
+  }
+
+  const renderScaleSelection = () => (
+    <div className="p-6 bg-white rounded-lg shadow-lg max-w-4xl mx-auto">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          Avaliação Psicométrica
+        </h2>
+        <p className="text-gray-600">
+          Selecione as escalas clínicas que você gostaria de aplicar para uma avaliação mais precisa.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {AVAILABLE_SCALES.map(scale => {
+          const isSelected = selectedScales.some(s => s.id === scale.id)
+          const isRecommended = suggestedScales.includes(scale.id)
+          
+          return (
+            <motion.div
+              key={scale.id}
+              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                isSelected 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-blue-300'
+              } ${isRecommended ? 'ring-2 ring-green-200' : ''}`}
+              onClick={() => handleScaleSelection(scale, !isSelected)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold text-gray-800">{scale.shortName}</h3>
+                    {isRecommended && (
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                        Recomendado
+                      </span>
+                    )}
+                    <span className={`px-2 py-1 text-xs rounded-full ${
+                      scale.evidenceLevel === 'gold_standard' 
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : scale.evidenceLevel === 'validated'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {scale.evidenceLevel === 'gold_standard' ? 'Padrão Ouro' : 
+                       scale.evidenceLevel === 'validated' ? 'Validado' : 'Experimental'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">{scale.purpose}</p>
+                  <div className="flex flex-wrap gap-2 text-xs text-gray-500">
+                    <span>Duração: {scale.duration}</span>
+                    <span>•</span>
+                    <span>Idade: {scale.ageRange}</span>
+                    <span>•</span>
+                    <span>{scale.questions.length} questões</span>
+                  </div>
+                </div>
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                  isSelected ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
+                }`}>
+                  {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
+                </div>
+              </div>
+            </motion.div>
+          )
+        })}
+      </div>
+
+      <div className="flex justify-between">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={startAssessment}
+          disabled={selectedScales.length === 0}
+          className={`px-6 py-2 rounded-lg transition-colors ${
+            selectedScales.length > 0
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          Iniciar Avaliação ({selectedScales.length} escala{selectedScales.length !== 1 ? 's' : ''})
+        </button>
+      </div>
+    </div>
+  )
+
+  const renderAssessment = () => {
+    if (currentScaleIndex >= selectedScales.length) return null
+    
+    const currentScale = selectedScales[currentScaleIndex]
+    const currentQuestion = currentScale.questions[currentQuestionIndex]
+    const currentResponse = responses[currentScale.id]?.[currentQuestion.id]
+
+    return (
+      <div className="p-6 bg-white rounded-lg shadow-lg max-w-3xl mx-auto">
+        {/* Progress Bar */}
+        {showProgress && (
+          <div className="mb-6">
+            <div className="flex justify-between text-sm text-gray-600 mb-2">
+              <span>{currentScale.shortName}</span>
+              <span>
+                Questão {currentQuestionIndex + 1} de {currentScale.questions.length}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <motion.div
+                className="bg-blue-600 h-2 rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${getCurrentProgress()}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+            <div className="text-center mt-2 text-sm text-gray-500">
+              Escala {currentScaleIndex + 1} de {selectedScales.length}
+            </div>
+          </div>
+        )}
+
+        {/* Question */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${currentScaleIndex}-${currentQuestionIndex}`}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                {currentQuestion.text}
+              </h3>
+              
+              <div className="space-y-3">
+                {currentQuestion.options.map((option) => (
+                  <motion.button
+                    key={option.value}
+                    className={`w-full p-4 text-left border-2 rounded-lg transition-all ${
+                      currentResponse === option.value
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300'
+                    }`}
+                    onClick={() => handleResponse(currentQuestion.id, option.value)}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <div className="flex items-center">
+                      <div className={`w-4 h-4 rounded-full border-2 mr-3 ${
+                        currentResponse === option.value
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300'
+                      }`}>
+                        {currentResponse === option.value && (
+                          <div className="w-2 h-2 bg-white rounded-full m-0.5" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-800">
+                          {option.label}
+                        </div>
+                        {option.description && (
+                          <div className="text-sm text-gray-600">
+                            {option.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation */}
+        <div className="flex justify-between">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={nextQuestion}
+            disabled={currentResponse === undefined}
+            className={`px-6 py-2 rounded-lg transition-colors ${
+              currentResponse !== undefined
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {currentQuestionIndex === currentScale.questions.length - 1
+              ? currentScaleIndex === selectedScales.length - 1
+                ? 'Finalizar'
+                : 'Próxima Escala'
+              : 'Próxima Questão'
+            }
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const renderResults = () => {
+    const results = generateFinalResults()
+    
+    return (
+      <div className="p-6 bg-white rounded-lg shadow-lg max-w-4xl mx-auto">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Resultados da Avaliação Psicométrica
+          </h2>
+          <p className="text-gray-600">
+            Seus resultados das escalas clínicas aplicadas.
+          </p>
+        </div>
+
+        {/* Overall Risk Assessment */}
+        <div className={`p-4 rounded-lg mb-6 ${
+          results.overallAssessment.riskLevel === 'low' ? 'bg-green-50 border border-green-200' :
+          results.overallAssessment.riskLevel === 'medium' ? 'bg-yellow-50 border border-yellow-200' :
+          results.overallAssessment.riskLevel === 'high' ? 'bg-orange-50 border border-orange-200' :
+          'bg-red-50 border border-red-200'
+        }`}>
+          <h3 className="font-semibold mb-2">Avaliação Geral</h3>
+          <p className={`font-medium ${
+            results.overallAssessment.riskLevel === 'low' ? 'text-green-800' :
+            results.overallAssessment.riskLevel === 'medium' ? 'text-yellow-800' :
+            results.overallAssessment.riskLevel === 'high' ? 'text-orange-800' :
+            'text-red-800'
+          }`}>
+            Nível de Risco: {
+              results.overallAssessment.riskLevel === 'low' ? 'Baixo' :
+              results.overallAssessment.riskLevel === 'medium' ? 'Moderado' :
+              results.overallAssessment.riskLevel === 'high' ? 'Alto' : 'Crítico'
+            }
+          </p>
+          
+          {results.overallAssessment.primaryConcerns.length > 0 && (
+            <div className="mt-2">
+              <p className="text-sm font-medium text-gray-700">Áreas de Atenção:</p>
+              <ul className="text-sm text-gray-600 ml-4">
+                {results.overallAssessment.primaryConcerns.map((concern, index) => (
+                  <li key={index} className="capitalize">• {concern}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Individual Scale Results */}
+        <div className="space-y-4 mb-6">
+          {results.completedAssessments.map((assessment, index) => (
+            <div key={index} className="p-4 border rounded-lg">
+              <div className="flex justify-between items-start mb-2">
+                <h4 className="font-semibold text-gray-800">{assessment.scaleName}</h4>
+                <span className="text-2xl font-bold text-blue-600">
+                  {assessment.score}
+                </span>
+              </div>
+              <p className="text-gray-600 mb-2">{assessment.interpretation}</p>
+              
+              <div className="mt-2">
+                <p className="text-sm font-medium text-gray-700 mb-1">Recomendações:</p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  {assessment.recommendations.map((rec, recIndex) => (
+                    <li key={recIndex}>• {rec}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Overall Recommendations */}
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg mb-6">
+          <h4 className="font-semibold text-blue-800 mb-2">Recomendações Gerais</h4>
+          <ul className="text-sm text-blue-700 space-y-1">
+            {results.overallAssessment.recommendations.map((rec, index) => (
+              <li key={index}>• {rec}</li>
+            ))}
+          </ul>
+        </div>
+
+        {results.overallAssessment.urgentAction && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
+            <h4 className="font-semibold text-red-800 mb-2">⚠️ Ação Urgente Recomendada</h4>
+            <p className="text-sm text-red-700">
+              Com base nos seus resultados, é altamente recomendado que você busque 
+              ajuda profissional o mais breve possível. Não hesite em entrar em contato 
+              com um psicólogo ou psiquiatra.
+            </p>
+          </div>
+        )}
+
+        <div className="flex justify-end">
+          <button
+            onClick={handleComplete}
+            className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            Continuar com Sessão
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="container mx-auto px-4">
+        {currentStep === 'selection' && renderScaleSelection()}
+        {currentStep === 'assessment' && renderAssessment()}
+        {currentStep === 'results' && renderResults()}
+      </div>
+    </div>
+  )
+}

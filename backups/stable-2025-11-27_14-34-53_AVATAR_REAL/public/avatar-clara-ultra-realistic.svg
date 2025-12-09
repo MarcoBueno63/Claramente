@@ -1,0 +1,226 @@
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradientes para pele ultra-realista -->
+    <radialGradient id="skinBase" cx="50%" cy="45%">
+      <stop offset="0%" style="stop-color:#fff5f0;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#fce4d6;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#f5d5c0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8c3a8;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Gradiente para cabelo com brilho -->
+    <linearGradient id="hairShine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5a3c;stop-opacity:1" />
+      <stop offset="20%" style="stop-color:#6b4423;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#5c3820;stop-opacity:1" />
+      <stop offset="80%" style="stop-color:#4a2f1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a2010;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradiente para olhos castanhos -->
+    <radialGradient id="irisGradient" cx="40%" cy="40%">
+      <stop offset="0%" style="stop-color:#a67c52;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#8b6f47;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#5c4a2f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3d2e1f;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Gradiente para lábios 3D -->
+    <linearGradient id="lipGradient3D" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f4b8c4;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#ea9999;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#d97b8f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c96a7f;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Sombras suaves -->
+    <filter id="softShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Brilho suave -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Fundo suave -->
+  <rect width="500" height="500" fill="#fdf8f5"/>
+  
+  <!-- Pescoço -->
+  <ellipse cx="250" cy="380" rx="50" ry="70" fill="url(#skinBase)" filter="url(#softShadow)"/>
+  
+  <!-- Ombros com blusa -->
+  <ellipse cx="250" cy="450" rx="120" ry="60" fill="#d4a5d8" filter="url(#softShadow)"/>
+  <path d="M 140 430 Q 150 420, 165 425 L 335 425 Q 350 420, 360 430 L 360 500 L 140 500 Z" fill="#c48bcc"/>
+  
+  <!-- Cabeça (formato oval feminino) -->
+  <ellipse cx="250" cy="220" rx="95" ry="115" fill="url(#skinBase)" filter="url(#softShadow)"/>
+  
+  <!-- Cabelo volumoso -->
+  <g filter="url(#softShadow)">
+    <!-- Volume principal -->
+    <ellipse cx="250" cy="120" rx="125" ry="85" fill="url(#hairShine)"/>
+    
+    <!-- Franja lateral -->
+    <path d="M 145 130 Q 140 110, 145 90 Q 155 70, 175 80 L 180 200 Q 170 215, 160 210 Z" fill="url(#hairShine)"/>
+    <path d="M 355 130 Q 360 110, 355 90 Q 345 70, 325 80 L 320 200 Q 330 215, 340 210 Z" fill="url(#hairShine)"/>
+    
+    <!-- Mechas frontais -->
+    <ellipse cx="160" cy="220" rx="30" ry="65" fill="url(#hairShine)"/>
+    <ellipse cx="340" cy="220" rx="30" ry="65" fill="url(#hairShine)"/>
+    
+    <!-- Mechas traseiras longas -->
+    <ellipse cx="145" cy="280" rx="25" ry="80" fill="url(#hairShine)"/>
+    <ellipse cx="355" cy="280" rx="25" ry="80" fill="url(#hairShine)"/>
+    
+    <!-- Franja -->
+    <path d="M 165 125 Q 180 105, 200 110 Q 220 105, 240 108 Q 260 105, 280 110 Q 300 105, 320 115 L 315 135 Q 285 120, 250 125 Q 215 120, 170 135 Z" fill="#5c3820"/>
+    
+    <!-- Brilho no cabelo -->
+    <ellipse cx="230" cy="110" rx="40" ry="20" fill="#a67c52" opacity="0.3"/>
+  </g>
+  
+  <!-- Orelhas delicadas -->
+  <ellipse cx="150" cy="230" rx="12" ry="18" fill="url(#skinBase)"/>
+  <ellipse cx="350" cy="230" rx="12" ry="18" fill="url(#skinBase)"/>
+  
+  <!-- Brincos dourados -->
+  <g filter="url(#glow)">
+    <circle cx="150" cy="240" r="6" fill="#e8b923"/>
+    <circle cx="150" cy="240" r="3" fill="#f4d96e"/>
+    <circle cx="350" cy="240" r="6" fill="#e8b923"/>
+    <circle cx="350" cy="240" r="3" fill="#f4d96e"/>
+  </g>
+  
+  <!-- Olho esquerdo -->
+  <g>
+    <!-- Base do olho -->
+    <ellipse cx="205" cy="210" rx="22" ry="24" fill="white" filter="url(#softShadow)"/>
+    <!-- Íris -->
+    <circle cx="205" cy="212" r="14" fill="url(#irisGradient)"/>
+    <!-- Pupila -->
+    <circle cx="205" cy="212" r="7" fill="#1a0f08"/>
+    <!-- Reflexo principal -->
+    <circle cx="208" cy="208" r="5" fill="white" opacity="0.9"/>
+    <!-- Reflexo secundário -->
+    <circle cx="202" cy="214" r="2" fill="white" opacity="0.6"/>
+  </g>
+  
+  <!-- Olho direito -->
+  <g>
+    <!-- Base do olho -->
+    <ellipse cx="295" cy="210" rx="22" ry="24" fill="white" filter="url(#softShadow)"/>
+    <!-- Íris -->
+    <circle cx="295" cy="212" r="14" fill="url(#irisGradient)"/>
+    <!-- Pupila -->
+    <circle cx="295" cy="212" r="7" fill="#1a0f08"/>
+    <!-- Reflexo principal -->
+    <circle cx="298" cy="208" r="5" fill="white" opacity="0.9"/>
+    <!-- Reflexo secundário -->
+    <circle cx="292" cy="214" r="2" fill="white" opacity="0.6"/>
+  </g>
+  
+  <!-- Cílios superiores (realistas) -->
+  <g stroke="#2c1810" fill="none" stroke-linecap="round" stroke-width="1.8">
+    <!-- Olho esquerdo -->
+    <path d="M 185 198 Q 182 192, 186 190"/>
+    <path d="M 192 196 Q 190 190, 194 188"/>
+    <path d="M 199 195 Q 198 189, 202 187"/>
+    <path d="M 206 195 Q 206 189, 210 187"/>
+    <path d="M 213 196 Q 214 190, 218 188"/>
+    <path d="M 220 198 Q 222 192, 226 191"/>
+    
+    <!-- Olho direito -->
+    <path d="M 275 198 Q 272 192, 276 190"/>
+    <path d="M 282 196 Q 280 190, 284 188"/>
+    <path d="M 289 195 Q 288 189, 292 187"/>
+    <path d="M 296 195 Q 296 189, 300 187"/>
+    <path d="M 303 196 Q 304 190, 308 188"/>
+    <path d="M 310 198 Q 312 192, 316 191"/>
+  </g>
+  
+  <!-- Cílios inferiores -->
+  <g stroke="#2c1810" fill="none" stroke-linecap="round" stroke-width="1.2" opacity="0.6">
+    <path d="M 188 223 Q 186 227, 188 230"/>
+    <path d="M 198 226 Q 197 230, 199 232"/>
+    <path d="M 208 226 Q 208 230, 210 232"/>
+    <path d="M 218 223 Q 220 227, 222 229"/>
+    
+    <path d="M 278 223 Q 276 227, 278 230"/>
+    <path d="M 288 226 Q 287 230, 289 232"/>
+    <path d="M 298 226 Q 298 230, 300 232"/>
+    <path d="M 308 223 Q 310 227, 312 229"/>
+  </g>
+  
+  <!-- Sobrancelhas arqueadas femininas -->
+  <path d="M 175 190 Q 195 182, 215 186 Q 225 188, 232 192" 
+        stroke="#4a2f1a" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 268 192 Q 275 188, 285 186 Q 305 182, 325 190" 
+        stroke="#4a2f1a" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+  
+  <!-- Sombra das sobrancelhas (profundidade) -->
+  <path d="M 175 190 Q 195 182, 215 186 Q 225 188, 232 192" 
+        stroke="#3a2010" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.3"/>
+  <path d="M 268 192 Q 275 188, 285 186 Q 305 182, 325 190" 
+        stroke="#3a2010" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.3"/>
+  
+  <!-- Nariz delicado -->
+  <path d="M 250 220 Q 248 245, 246 260" stroke="#e8c3a8" stroke-width="2" fill="none" opacity="0.4"/>
+  <ellipse cx="244" cy="262" rx="2.5" ry="3" fill="#d4a896" opacity="0.5"/>
+  <ellipse cx="252" cy="262" rx="2.5" ry="3" fill="#d4a896" opacity="0.5"/>
+  
+  <!-- Ponte nasal (sombra) -->
+  <path d="M 248 220 L 246 240" stroke="#d4a896" stroke-width="1" opacity="0.2"/>
+  
+  <!-- Lábios ultra-realistas -->
+  <g filter="url(#softShadow)">
+    <!-- Lábio superior -->
+    <path d="M 220 285 Q 235 279, 250 280 Q 265 279, 280 285" 
+          fill="url(#lipGradient3D)" stroke="#c96a7f" stroke-width="1"/>
+    
+    <!-- Lábio inferior (mais volumoso) -->
+    <path d="M 220 285 Q 230 296, 250 297 Q 270 296, 280 285" 
+          fill="#ea9999" stroke="#c96a7f" stroke-width="1"/>
+    
+    <!-- Arco do cupido (detalhe característico) -->
+    <path d="M 238 280 Q 244 278, 250 279 Q 256 278, 262 280" 
+          stroke="#f4b8c4" stroke-width="1.5" fill="none"/>
+    
+    <!-- Brilho nos lábios -->
+    <ellipse cx="250" cy="290" rx="18" ry="4" fill="white" opacity="0.5"/>
+    <ellipse cx="240" cy="287" rx="8" ry="3" fill="white" opacity="0.3"/>
+    <ellipse cx="260" cy="287" rx="8" ry="3" fill="white" opacity="0.3"/>
+  </g>
+  
+  <!-- Blush nas bochechas -->
+  <ellipse cx="185" cy="250" rx="28" ry="16" fill="#ffb3c1" opacity="0.4" filter="url(#glow)"/>
+  <ellipse cx="315" cy="250" rx="28" ry="16" fill="#ffb3c1" opacity="0.4" filter="url(#glow)"/>
+  
+  <!-- Sombra embaixo do queixo (profundidade) -->
+  <ellipse cx="250" cy="320" rx="60" ry="15" fill="#d4a896" opacity="0.15"/>
+  
+  <!-- Colar delicado -->
+  <ellipse cx="250" cy="365" rx="45" ry="5" fill="none" stroke="#e8b923" stroke-width="2.5"/>
+  <circle cx="250" cy="372" r="5" fill="#e8b923" filter="url(#glow)"/>
+  <circle cx="250" cy="372" r="2.5" fill="#f4d96e"/>
+  
+  <!-- Sinal de beleza (opcional) -->
+  <circle cx="270" cy="265" r="2.5" fill="#6b4423" opacity="0.7"/>
+  
+  <!-- Contorno do rosto (sombra suave) -->
+  <path d="M 160 180 Q 155 240, 165 290" stroke="#d4a896" stroke-width="2" opacity="0.2" fill="none"/>
+  <path d="M 340 180 Q 345 240, 335 290" stroke="#d4a896" stroke-width="2" opacity="0.2" fill="none"/>
+</svg>
