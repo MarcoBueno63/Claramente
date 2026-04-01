@@ -136,7 +136,7 @@ name: release-gates
 on:
   workflow_dispatch:
   push:
-    branches: ["main"]
+    branches: ["main", "master"]
 
 jobs:
   quality-and-build:
@@ -176,7 +176,7 @@ jobs:
   deploy-vercel:
     needs: quality-and-build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -205,7 +205,22 @@ jobs:
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 ```
 
-## 6) Comando de release manual (sequência única)
+## 6) Gate de Pull Request (sem deploy)
+
+Use o workflow `.github/workflows/pr-gates.yml` para validar PR antes de merge, sem executar migração nem deploy.
+
+Disparo:
+
+- `pull_request` para `main` ou `master`.
+
+Etapas:
+
+1. `npm ci`
+2. `npm run lint`
+3. `npm test -- --runInBand`
+4. `npm run build`
+
+## 7) Comando de release manual (sequência única)
 
 ```powershell
 npm ci; npm run lint; npm test -- --runInBand; npm run build; npx prisma migrate deploy
