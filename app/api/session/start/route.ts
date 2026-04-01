@@ -14,6 +14,24 @@ export async function POST(req: NextRequest) {
     if (!validateString(body.userId) || !validateString(body.language) || !validateString(body.persona) || !validateString(body.style)) {
       return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
     }
+
+    // Verificar se o usuário existe, se não existir, criar
+    let user = await prisma.user.findUnique({
+      where: { id: body.userId }
+    });
+
+    if (!user) {
+      console.log(`Criando usuário com ID: ${body.userId}`);
+      user = await prisma.user.create({
+        data: {
+          id: body.userId,
+          locale: body.language || "pt-BR",
+          ageConfirmed: true,
+          freeSessionsUsed: 0,
+        }
+      });
+    }
+
     const session = await prisma.session.create({
       data: {
         userId: body.userId,
@@ -21,10 +39,14 @@ export async function POST(req: NextRequest) {
         persona: body.persona,
         style: body.style,
         status: "active",
+        startedAt: new Date(),
       },
     });
+    
+    console.log(`Sessão criada com sucesso: ${session.id}`);
     return NextResponse.json(session);
-  } catch (error) {
+  } catch (err: unknown) {
+    console.error("Erro ao iniciar sessão:", err);
     return NextResponse.json({ error: "Erro ao iniciar sessão." }, { status: 500 });
   }
 }

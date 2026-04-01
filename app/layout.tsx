@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import { NextIntlClientProvider } from "next-intl";
-import ptBR from "../public/locales/pt-BR/common.json";
+import ClientIntlProvider from "../components/ClientIntlProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,12 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${inter.variable} ${roboto.variable} antialiased`}
-      >
-        <NextIntlClientProvider messages={ptBR} locale="pt-BR">
-          {children}
-        </NextIntlClientProvider>
+      <body className={`${inter.variable} ${roboto.variable} antialiased`}>
+        <ClientIntlProvider>{children}</ClientIntlProvider>
       </body>
     </html>
   );

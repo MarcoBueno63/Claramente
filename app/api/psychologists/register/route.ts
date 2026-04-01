@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(psychologist);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "Erro ao cadastrar psicólogo." }, { status: 500 });
   }
 }

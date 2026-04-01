@@ -1,3 +1,5 @@
+"use client";
+export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from "react";
 import { getUser } from "../../lib/auth";
 import { getPsychologists } from "../../lib/api";

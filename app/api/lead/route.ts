@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
       },
     });
     return NextResponse.json(lead);
-  } catch (error) {
+  } catch (err: unknown) {
+    console.error(err);
     return NextResponse.json({ error: "Erro ao criar lead." }, { status: 500 });
   }
 }

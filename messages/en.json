@@ -1,0 +1,13 @@
+{
+  "common": {
+    "welcome": "Welcome to ClaraMente",
+    "tagline": "Your mental health journey with artificial intelligence",
+    "language": "Language",
+    "choosePersona": "Choose therapist profile",
+    "chooseStyle": "Therapy style",
+    "ageConfirm": "I confirm that I am over 18 years old",
+    "consent": "I accept the terms of use and privacy policy",
+    "startSession": "Start Session",
+    "loading": "Loading..."
+  }
+}

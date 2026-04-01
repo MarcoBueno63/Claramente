@@ -1,3 +1,23 @@
+# ClaraMente (local copy)
+
+Este diretório é uma cópia local do projeto para rodar fora do OneDrive e evitar problemas com symlinks no Windows.
+
+Variáveis de ambiente (adicione em `.env`):
+
+- `DATABASE_URL` (Postgres)
+- `OPENAI_API_KEY` (obrigatório para chat)
+- `ELEVENLABS_API_KEY` (para TTS do avatar)
+- `DID_API_KEY` (para geração de vídeo/avatar)
+
+Endpoints úteis:
+
+- `POST /api/chat` — integra com OpenAI
+- `POST /api/avatar/tts` — gera áudio (base64) via ElevenLabs
+- `POST /api/avatar/video` — cria vídeo/avatar via D-ID (resposta e shape dependem da sua conta D-ID)
+
+Observações:
+- As integrações com ElevenLabs e D-ID requerem chaves e estão preparadas para falha quando a chave não estiver presente.
+- Antes de rodar, execute `npm install` neste diretório.
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

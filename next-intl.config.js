@@ -1,11 +1,7 @@
-
-
-
-module.exports = {
-	locales: ['pt-BR', 'en', 'es'],
-	defaultLocale: 'pt-BR',
-	localeDetection: true
+const nextIntlConfig = {
+  locales: ['pt-BR', 'en'],
+  defaultLocale: 'pt-BR',
+  timeZone: 'America/Sao_Paulo',
 };
 
-
-
+module.exports = nextIntlConfig;

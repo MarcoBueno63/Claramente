@@ -1,0 +1,13 @@
+{
+  "common": {
+    "welcome": "Bem-vindo ao ClaraMente",
+    "tagline": "Sua jornada de saúde mental com inteligência artificial",
+    "language": "Idioma",
+    "choosePersona": "Escolha o perfil do terapeuta",
+    "chooseStyle": "Estilo de terapia",
+    "ageConfirm": "Confirmo que tenho mais de 18 anos",
+    "consent": "Aceito os termos de uso e política de privacidade",
+    "startSession": "Iniciar Sessão",
+    "loading": "Carregando..."
+  }
+}

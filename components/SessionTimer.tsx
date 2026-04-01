@@ -1,21 +1,34 @@
+"use client";
 import React, { useEffect, useState } from "react";
 
 export default function SessionTimer({ max = 30, onExpire }: { max?: number; onExpire: () => void; }) {
   const [min, setMin] = useState(0);
+  const [sec, setSec] = useState(0);
+
   useEffect(() => {
-    const id = setInterval(() => setMin(m => {
-      if (m + 1 >= max) { clearInterval(id); onExpire(); }
-      return m + 1;
-    }), 60_000);
-    return () => clearInterval(id);
+    const interval = setInterval(() => {
+      setSec(prev => {
+        if (prev === 59) {
+          setMin(prevMin => {
+            const newMin = prevMin + 1;
+            if (newMin >= max) {
+              onExpire();
+              return max;
+            }
+            return newMin;
+          });
+          return 0;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [max, onExpire]);
-  const pct = Math.min(100, Math.round((min / max) * 100));
+
   return (
-    <div className="flex items-center gap-3 text-sm">
-      <div className="w-40 h-2 bg-gray-200 rounded">
-        <div className="h-2 bg-indigo-500 rounded" style={{ width: `${pct}%` }} />
-      </div>
-      <span>{min} / {max} min</span>
+    <div className="text-sm text-gray-600">
+      {min}:{sec.toString().padStart(2, '0')} / {max}:00
     </div>
   );
 }
