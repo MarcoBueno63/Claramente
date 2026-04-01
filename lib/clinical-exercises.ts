@@ -1,5 +1,4 @@
 // Exercícios Clínicos Completos Baseados no DSM-5-TR e TCC
-import { DSM5_PROTOCOLS, TCC_TECHNIQUES } from './dsm5-protocols';
 
 export interface ClinicalExercise {
   id: string;

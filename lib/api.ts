@@ -1,4 +1,5 @@
 // lib/api.ts
+import { getUser } from "./auth";
 
 export async function startSession({ userId, language, persona, style }: {
   userId: string;
@@ -15,18 +16,28 @@ export async function startSession({ userId, language, persona, style }: {
 }
 
 export async function sendMessage(sessionId: string, content: string, role: string) {
+  const user = getUser();
   const res = await fetch(`/api/session/${sessionId}/message`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Content-Type": "application/json",
+      "x-user-id": user.id,
+      "x-auth-token": user.authToken || "",
+    },
     body: JSON.stringify({ content, role })
   });
   return res.json();
 }
 
 export async function endSession(sessionId: string, summary: string) {
+  const user = getUser();
   const res = await fetch(`/api/session/${sessionId}/end`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Content-Type": "application/json",
+      "x-user-id": user.id,
+      "x-auth-token": user.authToken || "",
+    },
     body: JSON.stringify({ summary })
   });
   return res.json();

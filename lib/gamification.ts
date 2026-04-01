@@ -53,10 +53,27 @@ export interface SupportMessage {
   message: string;
   trigger: {
     condition: 'low_mood' | 'achievement' | 'streak' | 'struggle' | 'milestone';
-    value?: any;
+    value?: unknown;
   };
   personalizedFor?: string; // userId
   timestamp: Date;
+}
+
+interface GamificationStats {
+  sessionsCompleted: number;
+  exercisesCompleted: number;
+  beliefsIdentified: number;
+  tasksCompleted: number;
+  [key: string]: number;
+}
+
+interface GamificationData {
+  points: number;
+  level: UserLevel;
+  achievements: Achievement[];
+  activeChallenges: Challenge[];
+  streak: number;
+  stats: GamificationStats;
 }
 
 class GamificationSystem {
@@ -238,7 +255,7 @@ class GamificationSystem {
     achievements: Achievement[];
     activeChallenges: Challenge[];
     streak: number;
-    stats: any;
+    stats: GamificationStats;
   } {
     try {
       const data = localStorage.getItem(`${this.GAMIFICATION_KEY}_${userId}`);
@@ -248,9 +265,9 @@ class GamificationSystem {
         return this.createInitialUserData(userId);
       }
 
-      const userData = JSON.parse(data);
-      const userAchievements = achievements ? JSON.parse(achievements) : [];
-      const currentLevel = this.calculateUserLevel(userData.points);
+      const userData = JSON.parse(data) as Partial<GamificationData>;
+      const userAchievements = achievements ? (JSON.parse(achievements) as Achievement[]) : [];
+      const currentLevel = this.calculateUserLevel(userData.points ?? 0);
 
       return {
         points: userData.points || 0,
@@ -258,7 +275,12 @@ class GamificationSystem {
         achievements: userAchievements,
         activeChallenges: this.generateWeeklyChallenges(),
         streak: userData.streak || 0,
-        stats: userData.stats || {}
+        stats: userData.stats || {
+          sessionsCompleted: 0,
+          exercisesCompleted: 0,
+          beliefsIdentified: 0,
+          tasksCompleted: 0,
+        }
       };
     } catch (error) {
       console.error('Erro ao carregar dados de gamificação:', error);
@@ -267,8 +289,8 @@ class GamificationSystem {
   }
 
   // Criar dados iniciais
-  private createInitialUserData(userId: string): any {
-    const initialData = {
+  private createInitialUserData(userId: string): GamificationData {
+    const initialData: GamificationData = {
       points: 0,
       level: this.userLevels[0],
       achievements: [],
@@ -287,7 +309,7 @@ class GamificationSystem {
   }
 
   // Salvar dados do usuário
-  saveUserData(userId: string, data: any): void {
+  saveUserData(userId: string, data: GamificationData): void {
     try {
       const { achievements, ...userData } = data;
       localStorage.setItem(`${this.GAMIFICATION_KEY}_${userId}`, JSON.stringify(userData));
@@ -308,7 +330,7 @@ class GamificationSystem {
   }
 
   // Verificar conquistas
-  checkAchievements(userId: string, userData: any): { newAchievements: Achievement[], updatedData: any } {
+  checkAchievements(userId: string, userData: GamificationData): { newAchievements: Achievement[], updatedData: GamificationData } {
     const currentAchievements = userData.achievements || [];
     const newAchievements: Achievement[] = [];
 
@@ -356,7 +378,7 @@ class GamificationSystem {
   }
 
   // Atualizar estatísticas
-  updateStats(userId: string, action: string, value: number = 1): { updatedData: any, newAchievements: Achievement[] } {
+  updateStats(userId: string, action: string, value: number = 1): { updatedData: GamificationData, newAchievements: Achievement[] } {
     const userData = this.loadUserData(userId);
 
     // Atualizar estatísticas
@@ -388,7 +410,7 @@ class GamificationSystem {
   }
 
   // Gerar mensagem de apoio
-  generateSupportMessage(userData: any, context: any): SupportMessage | null {
+  generateSupportMessage(userData: GamificationData, context: { newAchievement?: boolean; lowMood?: boolean }): SupportMessage | null {
     const messages: Omit<SupportMessage, 'id' | 'timestamp'>[] = [
       {
         type: 'encouragement',
@@ -434,7 +456,7 @@ class GamificationSystem {
   }
 
   // Calcular progresso das conquistas
-  calculateAchievementProgress(achievement: Achievement, userData: any): number {
+  calculateAchievementProgress(achievement: Achievement, userData: GamificationData): number {
     switch (achievement.requirements.type) {
       case 'sessions':
         return Math.min(100, (userData.stats.sessionsCompleted / achievement.requirements.threshold) * 100);

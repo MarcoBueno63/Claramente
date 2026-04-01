@@ -8,7 +8,7 @@ const languages = [
 
 export default function LanguageSwitcher({ selected, onSelect }: { selected: string; onSelect: (v: string) => void; }) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" data-testid="language-switcher">
       {languages.map(l => (
         <button
           key={l.value}

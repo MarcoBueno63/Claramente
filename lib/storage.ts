@@ -9,7 +9,24 @@ export interface SessionData {
     role: 'user' | 'assistant';
     content: string;
     timestamp: Date;
-    tccContext?: any;
+    tccContext?: {
+      technique?: string;
+      category?: string;
+      coreBeliefs?: Array<{
+        domain: string;
+        type: string;
+        centralBelief: string;
+        confidence: number;
+      }>;
+      intermediateBeliefs?: Array<{
+        type: string;
+        category: string;
+        rule?: string;
+        attitude?: string;
+        intervention: string;
+      }>;
+      interventionType?: string;
+    };
   }>;
   beliefProfile: {
     coreBeliefs: Array<{
@@ -78,6 +95,26 @@ export interface UserProfile {
   };
 }
 
+type SerializedMessage = SessionData['messages'][number] & { timestamp: string | Date };
+type SerializedCoreBelief = SessionData['beliefProfile']['coreBeliefs'][number] & { identifiedAt: string | Date };
+type SerializedIntermediateBelief = SessionData['beliefProfile']['intermediateBeliefs'][number] & { identifiedAt: string | Date };
+type SerializedThoughtRecord = SessionData['thoughtRecords'][number] & { timestamp: string | Date };
+type SerializedTask = SessionData['therapeuticTasks'][number] & { createdAt: string | Date; dueDate?: string | Date };
+type SerializedEmotion = SessionData['emotionalProgress'][number] & { timestamp: string | Date };
+
+type SerializedSession = Omit<SessionData, 'startTime' | 'lastActivity' | 'messages' | 'beliefProfile' | 'thoughtRecords' | 'therapeuticTasks' | 'emotionalProgress'> & {
+  startTime: string | Date;
+  lastActivity: string | Date;
+  messages: SerializedMessage[];
+  beliefProfile: {
+    coreBeliefs: SerializedCoreBelief[];
+    intermediateBeliefs: SerializedIntermediateBelief[];
+  };
+  thoughtRecords: SerializedThoughtRecord[];
+  therapeuticTasks: SerializedTask[];
+  emotionalProgress: SerializedEmotion[];
+};
+
 class TherapyStorage {
   private readonly SESSION_KEY = 'claramente_sessions';
   private readonly PROFILE_KEY = 'claramente_profile';
@@ -114,7 +151,7 @@ class TherapyStorage {
       
       const session = JSON.parse(data);
       // Reconverter datas
-      return this.deserializeSession(session);
+      return this.deserializeSession(session as SerializedSession);
     } catch (error) {
       console.error('Erro ao carregar sessão atual:', error);
       return null;
@@ -127,7 +164,7 @@ class TherapyStorage {
       if (!data) return [];
       
       const sessions = JSON.parse(data);
-      return sessions.map((session: any) => this.deserializeSession(session));
+      return sessions.map((session: SerializedSession) => this.deserializeSession(session));
     } catch (error) {
       console.error('Erro ao carregar sessões:', error);
       return [];
@@ -284,35 +321,35 @@ class TherapyStorage {
   }
 
   // Utilidades
-  private deserializeSession(session: any): SessionData {
+  private deserializeSession(session: SerializedSession): SessionData {
     return {
       ...session,
       startTime: new Date(session.startTime),
       lastActivity: new Date(session.lastActivity),
-      messages: session.messages.map((msg: any) => ({
+      messages: session.messages.map((msg) => ({
         ...msg,
         timestamp: new Date(msg.timestamp)
       })),
       beliefProfile: {
-        coreBeliefs: session.beliefProfile.coreBeliefs.map((belief: any) => ({
+        coreBeliefs: session.beliefProfile.coreBeliefs.map((belief) => ({
           ...belief,
           identifiedAt: new Date(belief.identifiedAt)
         })),
-        intermediateBeliefs: session.beliefProfile.intermediateBeliefs.map((belief: any) => ({
+        intermediateBeliefs: session.beliefProfile.intermediateBeliefs.map((belief) => ({
           ...belief,
           identifiedAt: new Date(belief.identifiedAt)
         }))
       },
-      thoughtRecords: session.thoughtRecords.map((record: any) => ({
+      thoughtRecords: session.thoughtRecords.map((record) => ({
         ...record,
         timestamp: new Date(record.timestamp)
       })),
-      therapeuticTasks: session.therapeuticTasks.map((task: any) => ({
+      therapeuticTasks: session.therapeuticTasks.map((task) => ({
         ...task,
         createdAt: new Date(task.createdAt),
         dueDate: task.dueDate ? new Date(task.dueDate) : undefined
       })),
-      emotionalProgress: session.emotionalProgress.map((ep: any) => ({
+      emotionalProgress: session.emotionalProgress.map((ep) => ({
         ...ep,
         timestamp: new Date(ep.timestamp)
       }))

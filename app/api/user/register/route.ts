@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const requiredFields = ["email", "name"];
+    const requiredFields = ["id", "locale"];
     if (!validateRequired(body, requiredFields)) {
       return NextResponse.json({ error: "Campos obrigatórios ausentes." }, { status: 400 });
     }

@@ -6,6 +6,7 @@ export type ClaraMenteUser = {
   locale: string;
   freeSessionsUsed: number;
   lastSessionId?: string;
+  authToken?: string;
 };
 
 // Safe helpers that guard against server-side execution.

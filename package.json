@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern \"tests/**\"",
+    "lint": "eslint . --ignore-pattern \"tests/**\" --ignore-pattern \"**/*-backup.ts\" --ignore-pattern \"**/*-backup.tsx\" --ignore-pattern \"**/*.backup.tsx\" --ignore-pattern \"**/route_original.ts\"",
     "test": "jest"
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cypress": "^15.13.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "jest": "^30.1.3",

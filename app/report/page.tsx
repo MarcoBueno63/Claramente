@@ -33,6 +33,9 @@ export default function ReportPage() {
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-gray-900 rounded shadow">
       <h1 className="text-2xl font-bold text-indigo-600 mb-4">Relatório de Sessões</h1>
+      <button className="mb-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" data-testid="generate-report-btn">
+        Gerar relatório
+      </button>
       <ul>
         {users.map((u) => (
           <li key={u.id} className="mb-4 border-b pb-4">

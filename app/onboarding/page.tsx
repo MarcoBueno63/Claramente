@@ -14,8 +14,9 @@ export default function OnboardingPage() {
   const [style, setStyle] = useState("integrative");
   const [language, setLanguage] = useState("pt-BR");
   const devOk = process.env.NODE_ENV !== "production";
+  // Em produção, ambos começam como false e são obrigatórios
   const [ageConfirmed, setAgeConfirmed] = useState<boolean>(devOk);
-  const [consent, setConsent] = useState<boolean>(devOk === true ? true : false);
+  const [consent, setConsent] = useState<boolean>(devOk);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -30,11 +31,12 @@ export default function OnboardingPage() {
         style,
       });
 
-      setUser({ ...user, lastSessionId: session.id });
+      setUser({ ...user, lastSessionId: session.id, authToken: session.authToken });
       setLoading(false);
       router.push("/chat");
     } catch (error) {
-      console.error('Erro ao iniciar sessão:', error);
+      // Em produção, erros são tratados silenciosamente ou enviados para monitoramento
+      if (process.env.NODE_ENV !== 'production') console.error('Erro ao iniciar sessão:', error);
       setLoading(false);
       alert('Erro ao iniciar sessão. Tente novamente.');
     }
@@ -95,7 +97,7 @@ export default function OnboardingPage() {
                   <span className="font-semibold text-gray-800">Aprovado por Psicólogos</span>
                 </div>
                 <p className="text-gray-600 text-sm">
-                  "O ClaraMente segue protocolos profissionais de TCC e pode ser um excelente complemento ao tratamento tradicional."
+                  &quot;O ClaraMente segue protocolos profissionais de TCC e pode ser um excelente complemento ao tratamento tradicional.&quot;
                 </p>
                 <p className="text-xs text-gray-500 mt-2">- Dr. Ana Silva, CRP 06/12345</p>
               </div>
@@ -387,13 +389,15 @@ export default function OnboardingPage() {
               Próximo
             </button>
           ) : (
-            <button
-              onClick={handleStartSession}
-              disabled={!(ageConfirmed && consent) || loading}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Iniciando...' : 'Começar Terapia Agora'}
-            </button>
+              <button
+                onClick={handleStartSession}
+                disabled={!(ageConfirmed && consent) || loading}
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-disabled={!(ageConfirmed && consent) || loading}
+                title={!(ageConfirmed && consent) ? 'É necessário aceitar os termos e confirmar a idade' : ''}
+              >
+                {loading ? 'Iniciando...' : 'Começar Terapia Agora'}
+              </button>
           )}
         </div>
 

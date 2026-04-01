@@ -14,17 +14,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
     }
 
-    // Simulação de processamento de pagamento
-    const result = {
-      success: true,
-      message: "Pagamento processado com sucesso",
-      transactionId: `txn_${Date.now()}`
-    };
-    
     return NextResponse.json({ 
-      status: "success",
-      message: result.message,
-      transactionId: result.transactionId,
+      status: "pending",
+      provider: "stripe",
       userId: body.userId, 
       plan: body.plan 
     });

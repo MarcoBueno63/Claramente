@@ -10,7 +10,7 @@ const personas = [
 
 export default function PersonaPicker({ selected, onSelect }: { selected: string; onSelect: (v: string) => void; }) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" data-testid="persona-picker">
       {personas.map(p => (
         <button
           key={p.value}

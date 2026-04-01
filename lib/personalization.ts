@@ -121,8 +121,8 @@ class PersonalizationEngine {
   analyzeInteraction(
     userId: string, 
     userMessage: string, 
-    aiResponse: string, 
-    tccContext: any, 
+    _aiResponse: string, 
+    tccContext: Record<string, unknown>, 
     responseTime: number
   ): PersonalizationProfile {
     const profile = this.loadProfile(userId);
@@ -168,9 +168,10 @@ class PersonalizationEngine {
     }
 
     // Identificar técnicas preferidas
-    if (tccContext?.technique && responseTime < 15000) {
-      if (!profile.preferredTechniques.includes(tccContext.technique)) {
-        profile.preferredTechniques.push(tccContext.technique);
+    const technique = tccContext?.technique;
+    if (typeof technique === 'string' && responseTime < 15000) {
+      if (!profile.preferredTechniques.includes(technique)) {
+        profile.preferredTechniques.push(technique);
       }
     }
 
@@ -202,7 +203,8 @@ class PersonalizationEngine {
   }
 
   // Gerar resposta personalizada
-  personalizeResponse(baseResponse: string, profile: PersonalizationProfile, context: any): string {
+  personalizeResponse(baseResponse: string, profile: PersonalizationProfile, _context: unknown): string {
+    void _context;
     let personalizedResponse = baseResponse;
 
     // Ajustar tom baseado no perfil
@@ -290,7 +292,7 @@ class PersonalizationEngine {
     return triggers;
   }
 
-  private identifyStrengths(message: string, tccContext: any): string[] {
+  private identifyStrengths(message: string, tccContext: Record<string, unknown>): string[] {
     const strengths: string[] = [];
     
     // Indicadores de autoconhecimento
@@ -304,7 +306,7 @@ class PersonalizationEngine {
     }
     
     // Uso espontâneo de técnicas TCC
-    if (tccContext?.technique && message.includes('evidência')) {
+    if (typeof tccContext.technique === 'string' && message.includes('evidência')) {
       strengths.push('pensamento_crítico');
     }
     
@@ -328,7 +330,8 @@ class PersonalizationEngine {
     return Math.max(1, Math.min(10, engagement));
   }
 
-  private softenTone(response: string, profile: PersonalizationProfile): string {
+  private softenTone(response: string, _profile: PersonalizationProfile): string {
+    void _profile;
     // Adicionar frases suavizantes
     const softeningPhrases = [
       'Entendo que isso pode ser difícil',
@@ -369,7 +372,8 @@ class PersonalizationEngine {
     return response;
   }
 
-  private addEncouragement(profile: PersonalizationProfile): string {
+  private addEncouragement(_profile: PersonalizationProfile): string {
+    void _profile;
     const encouragements = [
       '\n\n💪 Você está fazendo um ótimo trabalho ao explorar esses sentimentos!',
       '\n\n🌟 Cada insight que você tem é um passo importante na sua jornada.',

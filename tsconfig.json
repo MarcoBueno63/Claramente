@@ -23,5 +23,12 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "cypress", "cypress.config.ts"]
+  "exclude": [
+    "node_modules",
+    "cypress",
+    "cypress.config.ts",
+    "**/*-backup.ts",
+    "**/*.backup.tsx",
+    "**/route_original.ts"
+  ]
 }

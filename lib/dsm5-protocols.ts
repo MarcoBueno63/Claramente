@@ -28,6 +28,7 @@ export interface TCCTechnique {
   applications: string[];
   estimatedDuration: string;
   homework?: string;
+  contraindicationsWarnings?: string[];
 }
 
 export interface SessionPhase {
@@ -309,6 +310,49 @@ export const DSM5_PROTOCOLS_COMPREHENSIVE: DSMProtocol[] = [
   },
 
   // TRANSTORNOS POR USO DE SUBSTÂNCIAS
+
+  // TERAPIA DE ACEITAÇÃO E COMPROMISSO (ACT)
+  {
+    code: 'Z71.89',
+    category: 'Intervenções Psicoterapêuticas',
+    name: 'Terapia de Aceitação e Compromisso (ACT)',
+    description: 'Protocolo baseado em ACT para aumento de flexibilidade psicológica, aceitação e ação comprometida.',
+    criteria: [
+      'Presença de sofrimento psicológico relacionado à evitação experiencial',
+      'Dificuldade em agir de acordo com valores pessoais',
+      'Fusão cognitiva e inflexibilidade comportamental',
+      'Desejo de mudança de relação com pensamentos e emoções',
+      'Comprometimento com ações alinhadas a valores'
+    ],
+    symptoms: ['evitação experiencial', 'fusão cognitiva', 'rigidez comportamental', 'desalinhamento de valores', 'baixa aceitação'],
+    interventions: ['aceitacao', 'desfusao', 'mindfulness_act', 'valores', 'acao_comprometida'],
+    sessionStructure: [
+      {
+        phase: 'Psicoeducação e Mapeamento',
+        objectives: ['Apresentar modelo hexaflex', 'Identificar padrões de evitação'],
+        techniques: ['psicoeducacao_act', 'mapeamento_hexaflex'],
+        duration: '2-3 sessões',
+        homework: ['Registro de situações de evitação']
+      },
+      {
+        phase: 'Aceitação e Mindfulness',
+        objectives: ['Desenvolver aceitação de experiências internas', 'Praticar atenção plena'],
+        techniques: ['exercicios_aceitacao', 'mindfulness_act'],
+        duration: '3-5 sessões',
+        homework: ['Prática diária de aceitação e mindfulness']
+      },
+      {
+        phase: 'Valores e Ação Comprometida',
+        objectives: ['Clarificar valores', 'Planejar ações alinhadas'],
+        techniques: ['clarificacao_valores', 'planejamento_acao'],
+        duration: '3-5 sessões',
+        homework: ['Plano de ação semanal baseado em valores']
+      }
+    ],
+    duration: '10-16 sessões',
+    efficacyRate: 75,
+    contraindicationsWarnings: ['Necessidade de adaptação para quadros psicóticos agudos', 'Monitorar risco de desregulação emocional']
+  },
   {
     code: 'F10.20',
     category: 'Transtornos por Uso de Substâncias',
@@ -344,6 +388,97 @@ export const DSM5_PROTOCOLS_COMPREHENSIVE: DSMProtocol[] = [
 // TÉCNICAS TCC COMPLETAS
 export const TCC_TECHNIQUES_COMPREHENSIVE: TCCTechnique[] = [
   // TÉCNICAS COGNITIVAS
+    // TÉCNICAS ACT
+    {
+      id: 'aceitacao',
+      name: 'Aceitação',
+      category: 'acceptance',
+      description: 'Desenvolver abertura para experiências internas desconfortáveis sem tentar evitá-las ou suprimi-las.',
+      instructions: [
+        'Explique o conceito de aceitação ao paciente.',
+        'Utilize metáforas como "areia movediça" ou "dedos na armadilha chinesa".',
+        'Pratique exercícios de aceitação durante sessões e como tarefa de casa.'
+      ],
+      targetSymptoms: ['evitação experiencial', 'ansiedade', 'dor emocional'],
+      contraindications: ['Quadros psicóticos agudos sem estabilização'],
+      evidenceLevel: 'A',
+      developedBy: 'Steven Hayes',
+      applications: ['ansiedade', 'depressão', 'transtornos de adaptação'],
+      estimatedDuration: '2-4 sessões',
+      homework: 'Prática diária de aceitação em situações desafiadoras.'
+    },
+    {
+      id: 'desfusao',
+      name: 'Desfusão Cognitiva',
+      category: 'acceptance',
+      description: 'Reduzir o impacto de pensamentos difíceis, ensinando o paciente a observar pensamentos sem se fundir a eles.',
+      instructions: [
+        'Apresente exercícios de desfusão, como repetir pensamentos em voz alta até perderem o sentido.',
+        'Utilize metáforas como "pensamentos como nuvens" ou "folhas no rio".',
+        'Incentive o distanciamento saudável dos pensamentos.'
+      ],
+      targetSymptoms: ['fusão cognitiva', 'ruminação', 'pensamentos automáticos negativos'],
+      contraindications: [],
+      evidenceLevel: 'A',
+      developedBy: 'Steven Hayes',
+      applications: ['ansiedade', 'depressão', 'TOC'],
+      estimatedDuration: '2-3 sessões',
+      homework: 'Exercícios de desfusão com pensamentos recorrentes.'
+    },
+    {
+      id: 'mindfulness_act',
+      name: 'Mindfulness (ACT)',
+      category: 'mindfulness',
+      description: 'Práticas de atenção plena para aumentar a consciência do momento presente.',
+      instructions: [
+        'Ensine exercícios de respiração consciente e escaneamento corporal.',
+        'Pratique observação sem julgamento de sensações, pensamentos e emoções.',
+        'Sugira práticas formais e informais de mindfulness.'
+      ],
+      targetSymptoms: ['desatenção', 'impulsividade', 'ansiedade'],
+      contraindications: ['Trauma não processado (usar com cautela)'],
+      evidenceLevel: 'A',
+      developedBy: 'Jon Kabat-Zinn',
+      applications: ['ansiedade', 'depressão', 'estresse'],
+      estimatedDuration: 'contínuo',
+      homework: 'Prática diária de mindfulness.'
+    },
+    {
+      id: 'valores',
+      name: 'Clareza de Valores',
+      category: 'acceptance',
+      description: 'Ajudar o paciente a identificar e clarificar valores pessoais para guiar ações significativas.',
+      instructions: [
+        'Utilize exercícios de identificação de valores (ex: lista de valores, roda da vida).',
+        'Explore situações em que o paciente se sentiu realizado.',
+        'Defina valores prioritários para orientar escolhas.'
+      ],
+      targetSymptoms: ['desalinhamento de valores', 'falta de propósito'],
+      contraindications: [],
+      evidenceLevel: 'A',
+      developedBy: 'Steven Hayes',
+      applications: ['motivação', 'depressão', 'adaptação'],
+      estimatedDuration: '1-2 sessões',
+      homework: 'Reflexão escrita sobre valores e ações cotidianas.'
+    },
+    {
+      id: 'acao_comprometida',
+      name: 'Ação Comprometida',
+      category: 'acceptance',
+      description: 'Planejar e executar ações alinhadas aos valores, mesmo diante de desconforto emocional.',
+      instructions: [
+        'Auxilie o paciente a definir metas pequenas e alinhadas aos valores.',
+        'Planeje passos concretos e revise obstáculos potenciais.',
+        'Reforce a importância de agir apesar do desconforto.'
+      ],
+      targetSymptoms: ['procrastinação', 'evitação', 'baixa motivação'],
+      contraindications: [],
+      evidenceLevel: 'A',
+      developedBy: 'Steven Hayes',
+      applications: ['ansiedade', 'depressão', 'adaptação'],
+      estimatedDuration: '2-4 sessões',
+      homework: 'Implementação de plano de ação semanal.'
+    },
   {
     id: 'reestruturacao_cognitiva',
     name: 'Reestruturação Cognitiva',
@@ -670,7 +805,10 @@ export const TCC_TECHNIQUES_COMPREHENSIVE: TCCTechnique[] = [
 // SISTEMA DE DETECÇÃO AUTOMÁTICA DE PROTOCOLOS
 export class ProtocolDetectionSystem {
   
-  static detectProtocol(symptoms: string[], userHistory: any): DSMProtocol[] {
+  static detectProtocol(
+    symptoms: string[],
+    userHistory: { previousDiagnoses?: string[] } | null
+  ): DSMProtocol[] {
     const matchingProtocols: { protocol: DSMProtocol; confidence: number }[] = [];
     
     DSM5_PROTOCOLS_COMPREHENSIVE.forEach(protocol => {

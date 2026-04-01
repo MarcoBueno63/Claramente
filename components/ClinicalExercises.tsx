@@ -5,14 +5,14 @@ interface ClinicalExercisesProps {
   protocolCode?: string;
   sessionNumber: number;
   patientSymptoms: string[];
-  onExerciseComplete: (exerciseId: string, results: any) => void;
+  onExerciseComplete: (exerciseId: string, results: Record<string, unknown>) => void;
   onExerciseStart: (exerciseId: string) => void;
 }
 
 interface ExerciseSession {
   exerciseId: string;
   startTime: Date;
-  responses: Record<string, any>;
+  responses: Record<string, unknown>;
   completed: boolean;
 }
 
@@ -68,11 +68,11 @@ export const ClinicalExercisesComponent: React.FC<ClinicalExercisesProps> = ({
     }
   };
 
-  const updateResponse = (key: string, value: any) => {
+  const updateResponse = (key: string, value: unknown) => {
     if (exerciseSession) {
       setExerciseSession(prev => ({
         ...prev!,
-        responses: { ...prev!.responses, [key]: value }
+        responses: { ...prev!.responses, [key]: value as unknown }
       }));
     }
   };
@@ -99,6 +99,9 @@ export const ClinicalExercisesComponent: React.FC<ClinicalExercisesProps> = ({
   };
 
   if (activeExercise && exerciseSession) {
+    const anxietyLevel = Number(exerciseSession.responses.anxietyLevel ?? 50);
+    const observations = String(exerciseSession.responses.observations ?? '');
+
     return (
       <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
         {/* Cabeçalho do Exercício */}
@@ -174,13 +177,13 @@ export const ClinicalExercisesComponent: React.FC<ClinicalExercisesProps> = ({
               type="range"
               min="0"
               max="100"
-              value={exerciseSession.responses.anxietyLevel || 50}
+              value={anxietyLevel}
               onChange={(e) => updateResponse('anxietyLevel', parseInt(e.target.value))}
               className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer"
             />
             <div className="flex justify-between text-xs text-blue-600 mt-1">
               <span>Muito calmo</span>
-              <span className="font-semibold">{exerciseSession.responses.anxietyLevel || 50}</span>
+              <span className="font-semibold">{anxietyLevel}</span>
               <span>Muito ansioso</span>
             </div>
           </div>
@@ -191,7 +194,7 @@ export const ClinicalExercisesComponent: React.FC<ClinicalExercisesProps> = ({
               Pensamentos e observações:
             </label>
             <textarea
-              value={exerciseSession.responses.observations || ''}
+              value={observations}
               onChange={(e) => updateResponse('observations', e.target.value)}
               className="w-full p-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows={3}

@@ -2,6 +2,31 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 
+const BREATHING_PHASES = {
+  inhale: { duration: 4, next: 'hold', instruction: 'Inspire devagar pelo nariz' },
+  hold: { duration: 4, next: 'exhale', instruction: 'Segure a respiração' },
+  exhale: { duration: 6, next: 'pause', instruction: 'Expire lentamente pela boca' },
+  pause: { duration: 2, next: 'inhale', instruction: 'Pausa natural' }
+} as const;
+
+const MINDFULNESS_PROMPTS = [
+  "Concentre-se na sua respiração natural...",
+  "Observe os pensamentos sem julgamento...",
+  "Sinta seu corpo relaxando...",
+  "Perceba os sons ao seu redor...",
+  "Retorne gentilmente à respiração...",
+  "Observe as sensações do momento presente..."
+] as const;
+
+const MUSCLE_GROUPS = [
+  { name: 'Pés e panturrilhas', instruction: 'Contraia os músculos dos pés e panturrilhas' },
+  { name: 'Coxas e glúteos', instruction: 'Tensione as coxas e glúteos' },
+  { name: 'Abdômen', instruction: 'Contraia os músculos abdominais' },
+  { name: 'Mãos e braços', instruction: 'Feche os punhos e contraia os braços' },
+  { name: 'Ombros e pescoço', instruction: 'Levante os ombros até as orelhas' },
+  { name: 'Rosto', instruction: 'Contraia todos os músculos do rosto' }
+] as const;
+
 // Exercício de Respiração Guiada
 export const BreathingExercise: React.FC<{ onComplete?: () => void }> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'inhale' | 'hold' | 'exhale' | 'pause'>('inhale');
@@ -10,12 +35,7 @@ export const BreathingExercise: React.FC<{ onComplete?: () => void }> = ({ onCom
   const [cycle, setCycle] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const phases = {
-    inhale: { duration: 4, next: 'hold', instruction: 'Inspire devagar pelo nariz' },
-    hold: { duration: 4, next: 'exhale', instruction: 'Segure a respiração' },
-    exhale: { duration: 6, next: 'pause', instruction: 'Expire lentamente pela boca' },
-    pause: { duration: 2, next: 'inhale', instruction: 'Pausa natural' }
-  };
+  const phases = BREATHING_PHASES;
 
   const startExercise = () => {
     setIsActive(true);
@@ -63,7 +83,7 @@ export const BreathingExercise: React.FC<{ onComplete?: () => void }> = ({ onCom
         clearInterval(intervalRef.current);
       }
     };
-  }, [isActive, phase, onComplete]);
+  }, [isActive, phase, onComplete, phases]);
 
   const getCircleClass = () => {
     switch (phase) {
@@ -249,14 +269,7 @@ export const MindfulnessTimer: React.FC<{ onComplete?: () => void }> = ({ onComp
   const [phase, setPhase] = useState<'setup' | 'running' | 'complete'>('setup');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const mindfulnessPrompts = [
-    "Concentre-se na sua respiração natural...",
-    "Observe os pensamentos sem julgamento...",
-    "Sinta seu corpo relaxando...",
-    "Perceba os sons ao seu redor...",
-    "Retorne gentilmente à respiração...",
-    "Observe as sensações do momento presente..."
-  ];
+  const mindfulnessPrompts = MINDFULNESS_PROMPTS;
 
   const [currentPrompt, setCurrentPrompt] = useState(0);
 
@@ -300,7 +313,7 @@ export const MindfulnessTimer: React.FC<{ onComplete?: () => void }> = ({ onComp
         clearInterval(intervalRef.current);
       }
     };
-  }, [isActive, timeLeft, duration, onComplete]);
+  }, [isActive, timeLeft, duration, onComplete, mindfulnessPrompts.length]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -411,14 +424,7 @@ export const MuscleRelaxation: React.FC<{ onComplete?: () => void }> = ({ onComp
   const [countdown, setCountdown] = useState(5);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const muscleGroups = [
-    { name: 'Pés e panturrilhas', instruction: 'Contraia os músculos dos pés e panturrilhas' },
-    { name: 'Coxas e glúteos', instruction: 'Tensione as coxas e glúteos' },
-    { name: 'Abdômen', instruction: 'Contraia os músculos abdominais' },
-    { name: 'Mãos e braços', instruction: 'Feche os punhos e contraia os braços' },
-    { name: 'Ombros e pescoço', instruction: 'Levante os ombros até as orelhas' },
-    { name: 'Rosto', instruction: 'Contraia todos os músculos do rosto' }
-  ];
+  const muscleGroups = MUSCLE_GROUPS;
 
   const startExercise = () => {
     setIsActive(true);
@@ -468,7 +474,7 @@ export const MuscleRelaxation: React.FC<{ onComplete?: () => void }> = ({ onComp
         clearInterval(intervalRef.current);
       }
     };
-  }, [isActive, phase, currentStep, onComplete]);
+  }, [isActive, phase, currentStep, onComplete, muscleGroups.length]);
 
   const getPhaseInstruction = () => {
     switch (phase) {

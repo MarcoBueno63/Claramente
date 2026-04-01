@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { validateString, validateRequired } from "@/lib/validate";
 
 // SISTEMA SIMPLIFICADO E MELHORADO DE CONVERSAÇÃO TCC
@@ -17,8 +17,6 @@ export async function POST(req: Request) {
     }
 
     const message = body.message.toLowerCase();
-    const userId = body.userId;
-
     // Delay terapêutico para sensação de reflexão
     await new Promise(resolve => setTimeout(resolve, 1200 + Math.random() * 800));
 

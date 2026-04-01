@@ -4,9 +4,7 @@ import { getUser } from "../lib/auth";
 import { therapyStorage, SessionData, UserProfile } from "../lib/storage";
 import { BreathingExercise, MoodTracker, MindfulnessTimer, MuscleRelaxation, MoodEntry } from './InteractiveExercises';
 import ClinicalExercisesComponent from './ClinicalExercises';
-import { DSM5_PROTOCOLS } from '@/lib/dsm5-protocols';
-import { ClinicalExercisePrescription } from '@/lib/clinical-exercises';
-import { gamificationSystem, Achievement, UserLevel, Challenge, SupportMessage } from "../lib/gamification";
+import { gamificationSystem, Achievement, UserLevel, Challenge } from "../lib/gamification";
 
 interface Message {
   id: string;
@@ -69,13 +67,17 @@ interface TherapeuticTask {
   dueDate?: Date;
   completed: boolean;
   createdAt: Date;
+  completedAt?: Date;
+  notes?: string;
 }
+
+type ActiveTab = 'chat' | 'exercises' | 'progress' | 'achievements' | 'settings' | 'profile' | 'clinical' | 'beliefs' | 'tasks';
 
 export default function ChatWindow() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chat' | 'exercises' | 'progress' | 'achievements' | 'settings' | 'profile' | 'clinical' | 'beliefs' | 'tasks'>('chat');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('chat');
   const [thoughtRecords, setThoughtRecords] = useState<ThoughtRecord[]>([]);
   const [beliefProfile, setBeliefProfile] = useState<BeliefProfile>({
     coreBeliefs: [],
@@ -95,10 +97,8 @@ export default function ChatWindow() {
     achievements: Achievement[];
     activeChallenges: Challenge[];
     streak: number;
-    stats: any;
+    stats: Record<string, unknown>;
   } | null>(null);
-  const [supportMessage, setSupportMessage] = useState<SupportMessage | null>(null);
-  const [showNewAchievement, setShowNewAchievement] = useState<Achievement | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -176,53 +176,63 @@ export default function ChatWindow() {
 
   // Auto-save da sessão
   useEffect(() => {
-    if (currentSession) {
+    setCurrentSession(prevSession => {
+      if (!prevSession) return prevSession;
+
       const updatedSession: SessionData = {
-        ...currentSession,
+        ...prevSession,
         lastActivity: new Date(),
         messages,
         beliefProfile,
         thoughtRecords,
         therapeuticTasks,
         sessionNotes,
-        emotionalProgress: currentSession.emotionalProgress
+        emotionalProgress: prevSession.emotionalProgress
       };
-      
-      setCurrentSession(updatedSession);
+
       therapyStorage.saveSession(updatedSession);
-      
+
       // Atualizar métricas de progresso
       therapyStorage.updateProgressMetrics(user.id, updatedSession);
-    }
-  }, [messages, beliefProfile, thoughtRecords, therapeuticTasks, sessionNotes]);
+      return updatedSession;
+    });
+  }, [messages, beliefProfile, thoughtRecords, therapeuticTasks, sessionNotes, user.id]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const updateBeliefProfile = useCallback((tccContext: any) => {
-    if (tccContext?.coreBeliefs?.length > 0) {
+  const updateBeliefProfile = useCallback((tccContext: Message['tccContext']) => {
+    const coreBeliefs = tccContext?.coreBeliefs ?? [];
+    if (coreBeliefs.length > 0) {
       setBeliefProfile(prev => ({
         ...prev,
-        coreBeliefs: [...prev.coreBeliefs, ...tccContext.coreBeliefs.map((belief: any) => ({
-          ...belief,
-          identifiedAt: new Date()
-        }))]
+        coreBeliefs: [
+          ...prev.coreBeliefs,
+          ...coreBeliefs.map((belief) => ({
+            ...belief,
+            identifiedAt: new Date()
+          }))
+        ]
       }));
     }
 
-    if (tccContext?.intermediateBeliefs?.length > 0) {
+    const intermediateBeliefs = tccContext?.intermediateBeliefs ?? [];
+    if (intermediateBeliefs.length > 0) {
       setBeliefProfile(prev => ({
         ...prev,
-        intermediateBeliefs: [...prev.intermediateBeliefs, ...tccContext.intermediateBeliefs.map((belief: any) => ({
-          ...belief,
-          identifiedAt: new Date()
-        }))]
+        intermediateBeliefs: [
+          ...prev.intermediateBeliefs,
+          ...intermediateBeliefs.map((belief) => ({
+            ...belief,
+            identifiedAt: new Date()
+          }))
+        ]
       }));
     }
   }, []);
 
-  const generateTherapeuticTask = useCallback((message: string, tccContext: any) => {
+  const generateTherapeuticTask = useCallback((message: string, tccContext: Message['tccContext']) => {
     const tasks: TherapeuticTask[] = [];
 
     if (tccContext?.technique === 'thought_record') {
@@ -237,7 +247,7 @@ export default function ChatWindow() {
       });
     }
 
-    if (tccContext?.coreBeliefs?.length > 0) {
+    if ((tccContext?.coreBeliefs?.length ?? 0) > 0) {
       tasks.push({
         id: (Date.now() + 1).toString(),
         type: 'behavioral_experiment',
@@ -417,51 +427,6 @@ export default function ChatWindow() {
           </div>
         )}
       </div>
-    </div>
-  );
-
-  const renderThoughtRecords = () => (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-800">📝 Registros de Pensamentos</h3>
-        <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
-          + Novo Registro
-        </button>
-      </div>
-      
-      {thoughtRecords.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          <p>Nenhum registro de pensamento ainda.</p>
-          <p className="text-sm mt-2">Use o chat para identificar pensamentos automáticos.</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {thoughtRecords.map((record) => (
-            <div key={record.id} className="p-4 bg-green-50 rounded-lg border border-green-200">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-green-800">Situação: {record.situation}</h4>
-                <span className="text-xs text-green-600">{formatTimestamp(record.timestamp)}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <span className="font-medium text-green-700">Emoção:</span>
-                  <p className="text-green-900">{record.emotion} (Intensidade: {record.intensity}/10)</p>
-                </div>
-                <div>
-                  <span className="font-medium text-green-700">Pensamento:</span>
-                  <p className="text-green-900">{record.automaticThought}</p>
-                </div>
-              </div>
-              {record.alternativeThought && (
-                <div className="mt-2 pt-2 border-t border-green-300">
-                  <span className="font-medium text-green-700">Pensamento Alternativo:</span>
-                  <p className="text-green-900 text-sm">{record.alternativeThought}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 
@@ -766,6 +731,8 @@ export default function ChatWindow() {
     if (!gamificationData) return <div>Carregando conquistas...</div>;
 
     const { level, points, achievements, activeChallenges, streak, stats } = gamificationData;
+    const sessionsCompleted = Number(stats.sessionsCompleted ?? 0);
+    const exercisesCompleted = Number(stats.exercisesCompleted ?? 0);
 
     return (
       <div className="space-y-4">
@@ -789,11 +756,11 @@ export default function ChatWindow() {
         {/* Estatísticas Rápidas */}
         <div className="grid grid-cols-2 gap-2">
           <div className="text-center p-3 bg-blue-50 rounded">
-            <div className="text-lg font-bold text-blue-600">{stats.sessionsCompleted || 0}</div>
+            <div className="text-lg font-bold text-blue-600">{sessionsCompleted}</div>
             <div className="text-xs text-blue-700">Sessões</div>
           </div>
           <div className="text-center p-3 bg-green-50 rounded">
-            <div className="text-lg font-bold text-green-600">{stats.exercisesCompleted || 0}</div>
+            <div className="text-lg font-bold text-green-600">{exercisesCompleted}</div>
             <div className="text-xs text-green-700">Exercícios</div>
           </div>
         </div>
@@ -892,18 +859,28 @@ export default function ChatWindow() {
               description: `Exercício ${exerciseId} concluído`,
               type: 'behavioral_experiment',
               completed: true,
+              createdAt: new Date(),
               completedAt: new Date(),
               notes: `Resultados: ${JSON.stringify(results)}`
             };
             setTherapeuticTasks(prev => [...prev, completedTask]);
           }}
-          onExerciseStart={(exerciseId) => {
-            console.log(`Iniciou exercício clínico: ${exerciseId}`);
+          onExerciseStart={() => {
+            // Log removido para produção
           }}
         />
       </div>
     );
   };
+
+  const tabs: Array<{ key: ActiveTab; label: string; title: string }> = [
+    { key: 'chat', label: '💬', title: 'Chat' },
+    { key: 'beliefs', label: '🧠', title: 'Crenças' },
+    { key: 'tasks', label: '📝', title: 'Tarefas' },
+    { key: 'exercises', label: '🧘', title: 'Exercícios' },
+    { key: 'achievements', label: '🏆', title: 'Conquistas' },
+    { key: 'progress', label: '📊', title: 'Progresso' }
+  ];
 
   return (
     <div className="h-full flex bg-white rounded-lg shadow-lg overflow-hidden">
@@ -993,17 +970,10 @@ export default function ChatWindow() {
       <div className="w-80 border-l border-gray-200 bg-gray-50">
         {/* Tabs */}
         <div className="flex border-b border-gray-200">
-          {[
-            { key: 'chat', label: '💬', title: 'Chat' },
-            { key: 'beliefs', label: '🧠', title: 'Crenças' },
-            { key: 'tasks', label: '�', title: 'Tarefas' },
-            { key: 'exercises', label: '🧘', title: 'Exercícios' },
-            { key: 'achievements', label: '🏆', title: 'Conquistas' },
-            { key: 'progress', label: '📊', title: 'Progresso' }
-          ].map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key)}
               className={`flex-1 p-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
                   ? 'border-blue-500 text-blue-600 bg-white'

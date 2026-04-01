@@ -19,6 +19,7 @@ type Psychologist = {
 export default function PsychologistsPage() {
   const [psychologists, setPsychologists] = useState<Psychologist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<string | null>(null);
   const user = getUser();
 
   useEffect(() => {
@@ -30,23 +31,29 @@ export default function PsychologistsPage() {
     fetchData();
   }, []);
 
-  async function handleLead(psychologistId: string) {
-    await fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: user.id, psychologistId })
-    });
-    alert("Indicação enviada! O profissional receberá seu contato.");
-  }
+    function handleLead(psychologistId: string) {
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, psychologistId })
+      });
+      setSelected(psychologistId);
+      console.log('Selecionado:', psychologistId);
+    }
 
   if (loading) return <div className="p-6">Carregando profissionais...</div>;
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-gray-900 rounded shadow">
       <h1 className="text-2xl font-bold text-indigo-600 mb-4">Psicólogos Parceiros</h1>
+      {selected !== null && (
+        <div className="mb-4 p-3 bg-green-100 text-green-800 rounded font-semibold" data-testid="selected-psychologist-msg">
+          Profissional selecionado
+        </div>
+      )}
       <ul>
         {psychologists.map((p) => (
-          <li key={p.id} className="mb-4 border-b pb-4">
+          <li key={p.id} className="mb-4 border-b pb-4" data-testid="psychologist-card">
             <div className="font-bold text-lg">{p.name} ({p.specialty})</div>
             <div className="text-sm text-gray-600">{p.location} | {p.approach} | {p.gender}</div>
             <div className="text-sm">Preço: R$ {p.price} | Avaliação: {p.rating} | Experiência: {p.experience} anos</div>

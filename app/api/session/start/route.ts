@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { validateString, validateRequired } from "@/lib/validate";
+import { issueAuthToken } from "@/lib/auth-token";
 
 const prisma = new PrismaClient();
 
@@ -43,8 +44,9 @@ export async function POST(req: NextRequest) {
       },
     });
     
+    const authToken = issueAuthToken(body.userId);
     console.log(`Sessão criada com sucesso: ${session.id}`);
-    return NextResponse.json(session);
+    return NextResponse.json({ ...session, authToken });
   } catch (err: unknown) {
     console.error("Erro ao iniciar sessão:", err);
     return NextResponse.json({ error: "Erro ao iniciar sessão." }, { status: 500 });

@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export default function PrivacyPage() {
@@ -6,7 +7,6 @@ export default function PrivacyPage() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Política de Privacidade - ClaraMente</h1>
-          
           <div className="space-y-6 text-gray-700">
             <section>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -20,7 +20,6 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-3">1. Informações que Coletamos</h2>
-              
               <h3 className="font-semibold text-gray-700 mb-2">Dados Fornecidos por Você:</h3>
               <ul className="list-disc pl-6 space-y-1 mb-4">
                 <li>Informações de registro (email, idade)</li>
@@ -28,7 +27,6 @@ export default function PrivacyPage() {
                 <li>Mensagens enviadas durante as sessões de terapia</li>
                 <li>Respostas a questionários e avaliações</li>
               </ul>
-
               <h3 className="font-semibold text-gray-700 mb-2">Dados Técnicos:</h3>
               <ul className="list-disc pl-6 space-y-1">
                 <li>Endereço IP (anonimizado)</li>
@@ -49,8 +47,26 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">3. Proteção de Dados</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">3. Direitos do Usuário</h2>
+              <ul className="list-disc pl-6 space-y-2 mb-3">
+                <li>Você pode exportar, compartilhar ou solicitar a exclusão de seus dados a qualquer momento.</li>
+                <li>Seus dados não são compartilhados com terceiros sem consentimento explícito.</li>
+                <li>Utilizamos práticas de segurança para proteger suas informações.</li>
+                <li>Você pode revisar e alterar suas preferências de privacidade a qualquer momento.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">4. Limites e Responsabilidade</h2>
+              <ul className="list-disc pl-6 space-y-2 mb-3">
+                <li>O ClaraMente é uma ferramenta de apoio, não substitui acompanhamento profissional.</li>
+                <li>Em caso de risco, procure imediatamente um serviço de saúde.</li>
+                <li>Não coletamos dados sensíveis além do necessário para funcionamento e segurança.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">5. Proteção de Dados</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <h3 className="font-semibold text-green-800 mb-2">🔐 Criptografia</h3>
@@ -60,7 +76,6 @@ export default function PrivacyPage() {
                     <li>• Chaves rotacionadas regularmente</li>
                   </ul>
                 </div>
-
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h3 className="font-semibold text-blue-800 mb-2">🇧🇷 Dados no Brasil</h3>
                   <ul className="text-blue-700 text-sm space-y-1">
@@ -73,114 +88,17 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">4. Compartilhamento de Informações</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">6. Compartilhamento de Informações</h2>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <h3 className="font-semibold text-red-800 mb-2">🚫 O que NÃO fazemos</h3>
                 <ul className="text-red-700 space-y-1">
                   <li>• Não vendemos seus dados para terceiros</li>
-                  <li>• Não compartilhamos informações pessoais para marketing</li>
-                  <li>• Não usamos dados para fins não relacionados à terapia</li>
-                </ul>
-              </div>
-
-              <h3 className="font-semibold text-gray-700 mb-2">Compartilhamento Limitado:</h3>
-              <ul className="list-disc pl-6 space-y-1">
-                <li><strong>Provedores de Serviço:</strong> Apenas parceiros necessários (hosting, backup) com contratos rígidos</li>
-                <li><strong>Emergências:</strong> Apenas se houver risco iminente à vida (conforme lei)</li>
-                <li><strong>Ordem Legal:</strong> Quando exigido por autoridades competentes</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">5. Seus Direitos (LGPD)</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-2">Direitos Básicos:</h3>
-                  <ul className="list-disc pl-6 text-sm space-y-1">
-                    <li>Acesso aos seus dados</li>
-                    <li>Correção de informações</li>
-                    <li>Exclusão de dados</li>
-                    <li>Portabilidade</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-2">Como Exercer:</h3>
-                  <ul className="list-disc pl-6 text-sm space-y-1">
-                    <li>Através do painel de controle</li>
-                    <li>Email: privacidade@claramente.ai</li>
-                    <li>Resposta em até 15 dias</li>
-                    <li>Gratuito (1ª solicitação/ano)</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">6. Retenção de Dados</h2>
-              <div className="space-y-3">
-                <div>
-                  <strong>Dados da Conta:</strong> Mantidos enquanto a conta estiver ativa
-                </div>
-                <div>
-                  <strong>Sessões de Terapia:</strong> 5 anos após última sessão (para continuidade do tratamento)
-                </div>
-                <div>
-                  <strong>Dados Técnicos:</strong> 2 anos para melhorias do serviço
-                </div>
-                <div>
-                  <strong>Após Exclusão:</strong> Dados anonimizados podem ser mantidos para pesquisa
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">7. Cookies e Tecnologias</h2>
-              <p className="mb-3">Usamos cookies essenciais para:</p>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Manter sua sessão ativa</li>
-                <li>Lembrar suas preferências</li>
-                <li>Melhorar segurança da plataforma</li>
-                <li>Analisar uso da plataforma (dados agregados)</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">8. Menores de Idade</h2>
-              <p>
-                O serviço é destinado a maiores de 18 anos. Menores podem usar apenas 
-                com supervisão de responsável legal que aceite estes termos.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">9. Alterações nesta Política</h2>
-              <p>
-                Podemos atualizar esta política. Mudanças significativas serão comunicadas 
-                com 30 dias de antecedência via email e notificação na plataforma.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">10. Contato</h2>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <p className="font-semibold mb-2">Data Protection Officer (DPO):</p>
-                <ul className="space-y-1 text-sm">
-                  <li><strong>Email:</strong> privacidade@claramente.ai</li>
-                  <li><strong>Telefone:</strong> (11) 3000-0000</li>
-                  <li><strong>Endereço:</strong> Rua da Tecnologia, 123 - São Paulo, SP</li>
+                  <li>• Não compartilhamos dados sensíveis sem consentimento</li>
+                  <li>• Não utilizamos dados para publicidade de terceiros</li>
                 </ul>
               </div>
             </section>
-          </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Última atualização: 10 de novembro de 2025
-            </p>
-            <p className="text-sm text-gray-500 mt-2">
-              ClaraMente LTDA - CNPJ: 12.345.678/0001-00
-            </p>
           </div>
         </div>
       </div>

@@ -14,6 +14,20 @@ export default function TermsPage() {
                 Ao utilizar o ClaraMente, você concorda com estes termos de uso. Se não concordar 
                 com qualquer parte destes termos, não deve usar nosso serviço.
               </p>
+
+            <section>
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">4. Ética, Limites e Responsabilidade</h2>
+              <ul className="list-disc pl-6 space-y-2 mb-3">
+                <li>O uso do ClaraMente é complementar e não substitui acompanhamento presencial ou remoto com profissional de saúde mental.</li>
+                <li>Em situações de risco (ideação suicida, automutilação, violência), procure imediatamente um profissional de saúde ou serviço de emergência.</li>
+                <li>O usuário é responsável por manter a confidencialidade de seu acesso e resultados.</li>
+                <li>O uso da ferramenta implica aceitação destes termos e respeito à privacidade e ética.</li>
+              </ul>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <h3 className="font-semibold text-red-800 mb-2">⚠️ Atenção</h3>
+                <p className="text-red-700">Esta ferramenta não realiza diagnóstico, não prescreve tratamentos e não substitui o contato com profissionais habilitados.</p>
+              </div>
+            </section>
             </section>
 
             <section>
